@@ -24,6 +24,7 @@ import Signin from "./pages/Siginin";
 import SocialMediaLinks from "./pages/SocialMediaLinks";
 import Tutorials from "./pages/Tutorials";
 import Users from "./pages/Users";
+import MoneyOwed from "./pages/MoneyOwed";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="/claimed" element={<Claimed />} />
             <Route path="/reward-requests" element={<RewardRequests key="crypto" />} />
             <Route path="/users" element={<Users />} />
+            <Route path="/owed" element={<MoneyOwed />} />
             <Route path="/companies" element={<Company />} />
             <Route path="/offers" element={<OfferTypes />} />
             <Route path="/coupons" element={<Coupons />} />

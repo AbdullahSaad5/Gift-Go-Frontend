@@ -93,6 +93,19 @@ export default function Sidebar({ toggle }) {
         ],
       },
       {
+        label: "Transactions",
+        icon: <User2Icon size={18} />,
+        isLink: false,
+        skip: true,
+        children: [
+          {
+            label: "Money Owed",
+            icon: <User2Icon size={18} />,
+            to: "/owed",
+          },
+        ],
+      },
+      {
         label: "Settings",
         icon: <Settings size={18} />,
         isLink: false,
