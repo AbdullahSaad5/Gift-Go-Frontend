@@ -27,8 +27,6 @@ const Drop = () => {
     company,
   } = useLocation().state || {};
 
-  console.log(useLocation().state);
-
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [center, setCenter] = useState(passedCenter || { lat: 30, lng: 70 });
@@ -44,14 +42,12 @@ const Drop = () => {
     libraries,
   });
 
-  console.log(center);
-
   const dropTypes = ["Silver", "Gold", "Platinum"];
 
   const dropCategories = ["Gift", "Coupon"];
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: "dropTypes",
+    queryKey: "companies",
     queryFn: () => {
       return axios.get(backendUrl + "/users?userType=Company", {
         headers: {
@@ -59,6 +55,7 @@ const Drop = () => {
         },
       });
     },
+    enabled: user?.userType === "Admin",
   });
 
   // Use the Geolocation API to get the user's location by default
@@ -122,6 +119,8 @@ const Drop = () => {
       data.locations = data.locations.map((obj) => Object.values(obj));
       data.center = center;
       data.radius = radius;
+
+      if (user.userType === "Company") data.company = user._id;
 
       return axios.post(backendUrl + `/drops`, data, {
         headers: {
@@ -241,16 +240,19 @@ const Drop = () => {
           >
             <LoadingOverlay visible={isLoading || isFetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
             <InputField label={"Drop Name"} required form={form} validateName="dropName" />
-            <SelectMenu
-              label={"Select Company"}
-              required
-              form={form}
-              searchable
-              data={data?.data?.data?.map((obj) => {
-                return { value: obj._id, label: obj.fullName };
-              })}
-              validateName="company"
-            />
+
+            {user?.userType === "Admin" && (
+              <SelectMenu
+                label={"Select Company"}
+                required
+                form={form}
+                searchable
+                data={data?.data?.data?.map((obj) => {
+                  return { value: obj._id, label: obj.fullName };
+                })}
+                validateName="company"
+              />
+            )}
             <SelectMenu
               label={"Select Drop Type"}
               required

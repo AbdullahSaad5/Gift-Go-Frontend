@@ -10,6 +10,12 @@ export const Columns = [
     sortable: true,
   },
   {
+    name: "Company",
+    selector: (row) => row.company.fullName,
+    width: "200px",
+    sortable: true,
+  },
+  {
     name: "Drop Name",
     selector: (row) => row.dropName,
     width: "200px",

@@ -18,7 +18,7 @@ const Company = () => {
   const [data, setData] = useState([]);
   const [editData, setEditData] = useState(null);
 
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchCompanies",
     () => {
       return axios.get(backendUrl + "/companies", {
@@ -53,7 +53,11 @@ const Company = () => {
         <Button primary={false} label={"Clear"} />
         <Button label={"Add Company"} onClick={() => setOpen(true)} />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns(setOpen, setEditData)} progressPending={status === "loading"} />
+      <DataGrid
+        data={filteredItems}
+        columns={Columns(setOpen, setEditData)}
+        progressPending={status === "loading" || isFetching}
+      />
       <AddOfferType open={open} setOpen={setOpen} editData={editData} setEditData={setEditData} />
     </Box>
   );

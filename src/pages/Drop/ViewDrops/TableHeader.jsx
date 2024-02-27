@@ -6,7 +6,13 @@ export const Columns = (setOpen, setEditData) => [
   {
     name: "Sr. No.",
     selector: (row) => row.serialNo,
-    width: "100px",
+    width: "120px",
+    sortable: true,
+  },
+  {
+    name: "Company",
+    selector: (row) => row.company.fullName,
+    grow: 1,
     sortable: true,
   },
   {
@@ -39,14 +45,9 @@ export const Columns = (setOpen, setEditData) => [
         target="_blank"
         rel="noreferrer"
       >
-        <Stack gap={0} p={6}>
-          <Text p={0} m={0}>
-            Lat: {row.location.coordinates[0]}
-          </Text>
-          <Text p={0} m={0}>
-            Lng: {row.location.coordinates[1]}
-          </Text>
-        </Stack>
+        Lat: {row.location.coordinates[0]}
+        <br />
+        Lng: {row.location.coordinates[1]}
       </a>
     ),
   },

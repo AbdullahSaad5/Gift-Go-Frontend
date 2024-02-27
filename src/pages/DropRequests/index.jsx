@@ -20,7 +20,7 @@ const DropRequests = () => {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_KEY,
     libraries: ["places", "geometry", "drawing"],
   });
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchDropRequests",
     () => {
       return axios.get(backendUrl + "/drop-request", {
@@ -88,7 +88,7 @@ const DropRequests = () => {
         />
         <Button primary={false} label={"Clear"} onClick={() => setOpen(true)} />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading"} />
+      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading" || isFetching} />
     </Box>
   );
 };

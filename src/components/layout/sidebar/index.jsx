@@ -11,13 +11,15 @@ import {
   StarIcon,
   User2Icon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles.module.css";
+import { UserContext } from "../../../context";
 export default function Sidebar({ toggle }) {
   // State to keep track of active link
   const [active, setActive] = useState("Dashboard");
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   // Sidebar Links
   const content = useMemo(() => {
@@ -59,7 +61,7 @@ export default function Sidebar({ toggle }) {
             to: "/drop-requests",
           },
           {
-            label: "Claimed",
+            label: "Reward Claimed",
             icon: <CheckCircle2Icon size={18} />,
             to: "/claimed",
           },
@@ -73,7 +75,7 @@ export default function Sidebar({ toggle }) {
           {
             label: "Reward Requests",
             icon: <HelpCircle size={18} />,
-            to: "/crypto-requests",
+            to: "/reward-requests",
           },
         ],
       },
@@ -81,6 +83,7 @@ export default function Sidebar({ toggle }) {
         label: "Players",
         icon: <User2Icon size={18} />,
         isLink: false,
+        skip: true,
         children: [
           {
             label: "Users",
@@ -116,8 +119,13 @@ export default function Sidebar({ toggle }) {
           },
         ],
       },
-    ];
-  }, []);
+    ].filter((item) => {
+      if (item.skip) {
+        return user?.userType === "Admin";
+      }
+      return true;
+    });
+  }, [user?.userType]);
 
   return (
     <Box className={styles["sidebar-container"]}>

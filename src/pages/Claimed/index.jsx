@@ -14,7 +14,7 @@ const Claimed = () => {
   const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchClaimed",
     () => {
       return axios.get(backendUrl + "/drops/claimed", {
@@ -49,7 +49,7 @@ const Claimed = () => {
         />
         <Button primary={false} label={"Clear"} onClick={() => setOpen(true)} />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading"} />
+      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading" || isFetching} />
     </Box>
   );
 };

@@ -60,12 +60,7 @@ const Signin = () => {
       >
         <Image src={logo} w={120} m="auto" />
         <Title ta={"center"}>Sign In</Title>
-        <InputField
-          label={"Email"}
-          required={true}
-          form={form}
-          validateName={"email"}
-        />
+        <InputField label={"Email"} required={true} form={form} validateName={"email"} />
         <PasswordInput
           placeholder="Password"
           label="Password"
@@ -73,11 +68,7 @@ const Signin = () => {
           withAsterisk
           {...form.getInputProps("password")}
         />
-        <Button
-          label={"Signin"}
-          type={"submit"}
-          loading={handleSignin.isLoading}
-        />
+        <Button label={"Signin"} type={"submit"} loading={handleSignin.isLoading} />
       </Stack>
     </form>
   );

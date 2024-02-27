@@ -10,14 +10,13 @@ import Advertisements from "./pages/Advertisement";
 import Claimed from "./pages/Claimed";
 import Company from "./pages/Companies";
 import Coupons from "./pages/Coupons";
-import RewardRequests from "./pages/CryptoRequests";
+import RewardRequests from "./pages/RewardRequests";
 import Dashboard from "./pages/Dashboard";
 import Drop from "./pages/Drop";
 import ViewDrops from "./pages/Drop/ViewDrops";
 import DropHistory from "./pages/DropHistory";
 import DropRequests from "./pages/DropRequests";
 import Live from "./pages/Live";
-import NFTRequests from "./pages/NFTRequests";
 import OfferTypes from "./pages/Offers";
 import Scheduled from "./pages/Scheduled";
 import Settings from "./pages/Settings";
@@ -25,7 +24,6 @@ import Signin from "./pages/Siginin";
 import SocialMediaLinks from "./pages/SocialMediaLinks";
 import Tutorials from "./pages/Tutorials";
 import Users from "./pages/Users";
-import AddCompany from "./pages/Companies/AddCompany";
 
 function App() {
   return (
@@ -42,8 +40,7 @@ function App() {
             <Route path="/drop-history" element={<DropHistory />} />
             <Route path="/drop-requests" element={<DropRequests />} />
             <Route path="/claimed" element={<Claimed />} />
-            <Route path="/crypto-requests" element={<RewardRequests key="crypto" />} />
-            <Route path="/nft-requests" element={<NFTRequests key="nft" />} />
+            <Route path="/reward-requests" element={<RewardRequests key="crypto" />} />
             <Route path="/users" element={<Users />} />
             <Route path="/companies" element={<Company />} />
             <Route path="/offers" element={<OfferTypes />} />

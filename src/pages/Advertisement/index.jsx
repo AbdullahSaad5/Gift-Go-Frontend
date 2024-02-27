@@ -1,13 +1,4 @@
-import {
-  Accordion,
-  Box,
-  Flex,
-  Group,
-  PasswordInput,
-  Stack,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Accordion, Box, Flex, Group, PasswordInput, Stack, TextInput, Title } from "@mantine/core";
 import React, { useContext, useState } from "react";
 import Button from "../../components/general/Button";
 import PageHeader from "../../components/general/PageHeader";
@@ -24,19 +15,14 @@ import { Columns } from "./TableHeader";
 import ImageUpload from "../../components/general/ImageUpload";
 import uuid from "react-uuid";
 import { storage } from "../../firebase";
-import {
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+import { ref, getDownloadURL, uploadBytesResumable, deleteObject } from "firebase/storage";
 
 const Advertisements = () => {
   const queryClient = new useQueryClient();
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchAdvertisements",
     () => {
       return axios.get(backendUrl + "/advertisement", {
@@ -66,15 +52,9 @@ const Advertisements = () => {
     },
 
     validate: {
-      title: (value) =>
-        value?.length > 2
-          ? null
-          : "Please enter title greater than 2 characters",
+      title: (value) => (value?.length > 2 ? null : "Please enter title greater than 2 characters"),
       coverImage: (value) => (value ? null : "Please Upload Cover Image"),
-      link: (value) =>
-        value?.length > 0
-          ? null
-          : "Please enter link greater than 0 characters",
+      link: (value) => (value?.length > 0 ? null : "Please enter link greater than 0 characters"),
     },
   });
   const handleAddAdvertisement = useMutation(
@@ -106,15 +86,11 @@ const Advertisements = () => {
             console.log("File available at", downloadURL);
             values.coverImage = downloadURL;
             try {
-              let response = await axios.post(
-                backendUrl + `/advertisement`,
-                values,
-                {
-                  headers: {
-                    authorization: `${user.accessToken}`,
-                  },
-                }
-              );
+              let response = await axios.post(backendUrl + `/advertisement`, values, {
+                headers: {
+                  authorization: `${user.accessToken}`,
+                },
+              });
               console.log(response);
               toast.success(response.data.message);
               queryClient.invalidateQueries("fetchAdvertisements");
@@ -171,48 +147,25 @@ const Advertisements = () => {
               <Title order={3}>Add Advertisement</Title>
             </Accordion.Control>
             <Accordion.Panel>
-              <TextInput
-                label="Title"
-                {...form.getInputProps("title")}
-                size="md"
-              />
+              <TextInput label="Title" {...form.getInputProps("title")} size="md" />
               {/* <TextInput
                 label="Advertisement Cover Image URL"
                 {...form.getInputProps("coverImage")}
                 size="md"
               /> */}
-              <TextInput
-                label="Advertisement Link"
-                {...form.getInputProps("link")}
-                size="md"
-              />
-              <TextInput
-                label="Description"
-                {...form.getInputProps("description")}
-                size="md"
-              />
+              <TextInput label="Advertisement Link" {...form.getInputProps("link")} size="md" />
+              <TextInput label="Description" {...form.getInputProps("description")} size="md" />
               <ImageUpload form={form} name="coverImage" />
               <Group justify="flex-end" mt="lg">
-                <Button
-                  label={"Cancel"}
-                  primary={false}
-                  onClick={() => navigate("/")}
-                />
+                <Button label={"Cancel"} primary={false} onClick={() => navigate("/")} />
                 <Button label={"Add"} type={"submit"} />
               </Group>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>
         <Box px="md">
-          <PageHeader
-            title={"Advertisements Table"}
-            subTitle={"View all Advertisements"}
-          />
-          <DataGrid
-            data={data}
-            columns={Columns}
-            progressLoading={status === "loading"}
-          />
+          <PageHeader title={"Advertisements Table"} subTitle={"View all Advertisements"} />
+          <DataGrid data={data} columns={Columns} progressLoading={status === "loading" || isFetching} />
         </Box>
       </Stack>
     </form>

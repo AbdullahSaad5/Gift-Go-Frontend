@@ -19,7 +19,7 @@ const ViewDrops = () => {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
 
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchDrops",
     () => {
       return axios.get(backendUrl + "/drops", {
@@ -71,7 +71,7 @@ const ViewDrops = () => {
         </Button>
         <Button onClick={() => navigate("/add-drop")}>Add Drop</Button>
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns(setOpen)} progressPending={status === "loading"} />
+      <DataGrid data={filteredItems} columns={Columns(setOpen)} progressPending={status === "loading" || isFetching} />
     </Box>
   );
 };

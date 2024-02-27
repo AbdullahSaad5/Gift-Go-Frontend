@@ -1,13 +1,4 @@
-import {
-  Accordion,
-  Box,
-  Flex,
-  Group,
-  PasswordInput,
-  Stack,
-  TextInput,
-  Title,
-} from "@mantine/core";
+import { Accordion, Box, Flex, Group, PasswordInput, Stack, TextInput, Title } from "@mantine/core";
 import React, { useContext, useState } from "react";
 import Button from "../../components/general/Button";
 import PageHeader from "../../components/general/PageHeader";
@@ -31,7 +22,7 @@ const Tutorials = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchTutorials",
     () => {
       return axios.get(backendUrl + "/tutorial", {
@@ -68,14 +59,8 @@ const Tutorials = () => {
     },
 
     validate: {
-      title: (value) =>
-        value?.length > 2
-          ? null
-          : "Please enter title greater than 2 characters",
-      link: (value) =>
-        value?.length > 0
-          ? null
-          : "Please enter link greater than 0 characters",
+      title: (value) => (value?.length > 2 ? null : "Please enter title greater than 2 characters"),
+      link: (value) => (value?.length > 0 ? null : "Please enter link greater than 0 characters"),
       coverImage: (value) => (value ? null : "Please upload cover image"),
     },
   });
@@ -107,15 +92,11 @@ const Tutorials = () => {
             console.log("File available at", downloadURL);
             values.coverImage = downloadURL;
             try {
-              let response = await axios.post(
-                backendUrl + `/tutorial`,
-                values,
-                {
-                  headers: {
-                    authorization: `${user.accessToken}`,
-                  },
-                }
-              );
+              let response = await axios.post(backendUrl + `/tutorial`, values, {
+                headers: {
+                  authorization: `${user.accessToken}`,
+                },
+              });
               toast.success(response.data.message);
               queryClient.invalidateQueries("fetchTutorials");
               form.reset();
@@ -171,44 +152,21 @@ const Tutorials = () => {
               <Title order={3}>Add Tutorial</Title>
             </Accordion.Control>
             <Accordion.Panel>
-              <TextInput
-                label="Title"
-                {...form.getInputProps("title")}
-                size="md"
-              />
-              <TextInput
-                label="Tutorial Link"
-                {...form.getInputProps("link")}
-                size="md"
-              />
-              <TextInput
-                label="Description"
-                {...form.getInputProps("description")}
-                size="md"
-              />
+              <TextInput label="Title" {...form.getInputProps("title")} size="md" />
+              <TextInput label="Tutorial Link" {...form.getInputProps("link")} size="md" />
+              <TextInput label="Description" {...form.getInputProps("description")} size="md" />
 
               <ImageUpload form={form} name="coverImage" />
               <Group justify="flex-end" mt="lg">
-                <Button
-                  label={"Cancel"}
-                  primary={false}
-                  onClick={() => navigate("/")}
-                />
+                <Button label={"Cancel"} primary={false} onClick={() => navigate("/")} />
                 <Button label={"Add"} type={"submit"} />
               </Group>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>
         <Box px="md">
-          <PageHeader
-            title={"Tutorials Table"}
-            subTitle={"View all of tutorials"}
-          />
-          <DataGrid
-            data={data}
-            columns={Columns}
-            progressLoading={status === "loading"}
-          />
+          <PageHeader title={"Tutorials Table"} subTitle={"View all of tutorials"} />
+          <DataGrid data={data} columns={Columns} progressLoading={status === "loading" || isFetching} />
         </Box>
       </Stack>
     </form>

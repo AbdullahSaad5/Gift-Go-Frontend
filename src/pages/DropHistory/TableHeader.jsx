@@ -11,14 +11,9 @@ export const Columns = [
     sortable: true,
   },
   {
-    name: "Center",
-    selector: (row) => row.centerLocation,
+    name: "Company",
+    selector: (row) => row.company.fullName,
     width: "200px",
-    cell: (row) => (
-      <a href={row.centerLocationURL} target="_blank">
-        {row.centerLocation}
-      </a>
-    ),
     sortable: true,
   },
   {
@@ -42,7 +37,17 @@ export const Columns = [
     // center: true,
     width: "200px",
   },
-
+  {
+    name: "Center",
+    selector: (row) => row.centerLocation,
+    width: "200px",
+    cell: (row) => (
+      <a href={row.centerLocationURL} target="_blank">
+        {row.centerLocation}
+      </a>
+    ),
+    sortable: true,
+  },
   {
     name: "Drops",
     selector: (row) => row.drops.length,

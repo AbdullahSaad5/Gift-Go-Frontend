@@ -12,15 +12,15 @@ import axios from "axios";
 import { UserContext } from "../../context";
 import toast from "react-hot-toast";
 
-const Requests = () => {
+const RewardRequests = () => {
   const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchRequests",
     () => {
-      return axios.get(backendUrl + "/request?conversionType=NFT", {
+      return axios.get(backendUrl + "/drops/not-claimed", {
         headers: {
           authorization: `${user.accessToken}`,
         },
@@ -29,26 +29,18 @@ const Requests = () => {
     {
       onSuccess: (res) => {
         const data = res.data.data;
-        let index = 0;
-        let newData = data.filter((obj, ind) => {
-          if (obj.user !== null) {
-            obj.serialNo = ++index;
-            return true;
-          }
-          return false;
+        let newData = data.map((obj, ind) => {
+          return { ...obj, serialNo: ind + 1 };
         });
         setData(newData);
         toast.dismiss();
       },
     }
   );
-  const filteredItems = data.filter((item) => {
-    return item?.user?.fullName?.toLowerCase().includes(search.toLowerCase());
-  });
 
   return (
     <Box>
-      <PageHeader title={"NFT Requests"} subTitle={"View NFT Reward Requests of your players"} />
+      <PageHeader title={"Reward Requests"} subTitle={"View Reward Requests of your players"} />
       <Flex gap="md" my="md">
         <InputField
           placeholder={"Search Drop here..."}
@@ -66,9 +58,9 @@ const Requests = () => {
           }}
         />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading"} />
+      <DataGrid data={data} columns={Columns} progressLoading={status === "loading" || isFetching} />
     </Box>
   );
 };
 
-export default Requests;
+export default RewardRequests;

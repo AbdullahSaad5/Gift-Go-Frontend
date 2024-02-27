@@ -22,7 +22,7 @@ const Users = () => {
   const [userType, setUserType] = useState(null);
   const [opened, { open, close }] = useDisclosure();
 
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchUsers",
     () => {
       return axios.get(backendUrl + "/users", {
@@ -105,7 +105,11 @@ const Users = () => {
           }}
         />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns(onHandleStatus)} progressPending={status === "loading"} />
+      <DataGrid
+        data={filteredItems}
+        columns={Columns(onHandleStatus)}
+        progressPending={status === "loading" || isFetching}
+      />
       <AddCompany opened={opened} open={open} close={close} />
     </Box>
   );

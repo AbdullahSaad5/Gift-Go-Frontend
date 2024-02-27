@@ -14,7 +14,7 @@ const Scheduled = () => {
   const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchScheduled",
     () => {
       return axios.get(backendUrl + "/drops/scheduled", {
@@ -48,7 +48,7 @@ const Scheduled = () => {
         />
         <Button primary={false} label={"Clear"} onClick={() => setOpen(true)} />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading"} />
+      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading" || isFetching} />
     </Box>
   );
 };

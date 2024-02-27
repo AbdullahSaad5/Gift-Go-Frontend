@@ -45,7 +45,7 @@ const Coupons = () => {
     },
   ]);
 
-  const { status } = useQuery(
+  const { status, isFetching } = useQuery(
     "fetchCoupons",
     () => {
       return axios.get(backendUrl + "/coupons");
@@ -88,7 +88,7 @@ const Coupons = () => {
         columns={Columns}
         expandableRows={true}
         expandableRowsComponent={SingleCoupon}
-        progressPending={status === "loading"}
+        progressPending={status === "loading" || isFetching}
       />
       <AddOfferType open={open} setOpen={setOpen} />
     </Box>

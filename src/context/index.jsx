@@ -4,8 +4,8 @@ export const UserProvider = ({ children }) => {
   let userData = JSON.parse(localStorage.getItem("user"));
 
   const [user, setUser] = useState({
-    name: userData?.name,
-    id: userData?.userId,
+    name: userData?.fullName,
+    id: userData?.id,
     email: userData?.email,
     accessToken: userData?.accessToken,
   });

@@ -5,6 +5,7 @@ import { UserContext } from "../../context";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { backendUrl } from "../../constants";
+import Button from "../../components/general/Button";
 
 export const Columns = [
   {
@@ -15,26 +16,20 @@ export const Columns = [
   },
   {
     name: "Request By",
-    selector: (row) => row.user?.fullName,
+    selector: (row) => row.scannedBy?.fullName + "\n" + row.scannedBy?.email,
     sortable: true,
     cell: (row) => (
       <Stack gap={0} py="xs">
         <Text p={0} m={0}>
-          {row.user?.fullName}
+          {row.scannedBy?.fullName}
         </Text>
-        <a size="xs" href={`mailto:${row.user?.email}`}>
-          {row.user?.email}
+        <a size="xs" href={`mailto:${row.scannedBy?.email}`}>
+          {row.scannedBy?.email}
         </a>
       </Stack>
     ),
+
     width: "250px",
-  },
-  {
-    name: "Joker Type",
-    selector: (row) => row?.handName,
-    sortable: true,
-    // center: true,
-    width: "150px",
   },
   {
     name: "Request Date",
@@ -45,12 +40,45 @@ export const Columns = [
     cell: (row) => <Text>{new Date(row.createdAt).toLocaleString()}</Text>,
   },
   {
-    name: "Status",
-    selector: (row) => row.status,
+    name: "Offer Name",
+    selector: (row) => row.dropName,
+    width: "200px",
+    sortable: true,
+  },
+  {
+    name: "Offer Type",
+    selector: (row) => row.dropType,
+    width: "200px",
+    sortable: true,
+  },
+  {
+    name: "Offer Category",
+    selector: (row) => row.dropCategory,
+    width: "200px",
+    sortable: true,
+  },
+  {
+    name: "Company",
+    selector: (row) => row.company.fullName,
+    width: "200px",
+    sortable: true,
+  },
+  {
+    name: "Deliver Reward",
+    selector: (row) => row.rewardDelivered,
     sortable: true,
     center: true,
     width: "200px",
-    cell: (row) => <StatusMenu status={row.status} id={row._id} />,
+    cell: (row) =>
+      row.rewardDelivered ? (
+        <Badge color="green" variant="light">
+          Delivered
+        </Badge>
+      ) : (
+        <Button variant="subtle" size="compact-lg" fz="sm">
+          Deliver
+        </Button>
+      ),
   },
 ];
 
@@ -89,13 +117,7 @@ const StatusMenu = ({ status, id }) => {
         <Badge
           style={{ cursor: status === "Pending" ? "pointer" : "default" }}
           rightSection={status === "Pending" ? <span>▼</span> : null}
-          color={
-            status === "Pending"
-              ? "orange"
-              : status === "Accepted"
-              ? "green"
-              : "red"
-          }
+          color={status === "Pending" ? "orange" : status === "Accepted" ? "green" : "red"}
           variant="light"
         >
           {status}
@@ -126,17 +148,7 @@ const StatusMenu = ({ status, id }) => {
 
 const StatusBadge = ({ status }) => {
   return (
-    <Badge
-      color={
-        status === "Pending"
-          ? "orange"
-          : status === "Accepted"
-          ? "green"
-          : "red"
-      }
-      variant="light"
-      w="100%"
-    >
+    <Badge color={status === "Pending" ? "orange" : status === "Accepted" ? "green" : "red"} variant="light" w="100%">
       {status}
     </Badge>
   );

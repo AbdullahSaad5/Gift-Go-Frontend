@@ -14,6 +14,18 @@ export const Columns = [
     sortable: true,
   },
   {
+    name: "Offer Type",
+    selector: (row) => row.dropType,
+    width: "200px",
+    sortable: true,
+  },
+  {
+    name: "Offer Category",
+    selector: (row) => row.dropCategory,
+    width: "200px",
+    sortable: true,
+  },
+  {
     name: "Claimed By",
     selector: (row) => row.scannedBy?.fullName,
     sortable: true,
@@ -21,19 +33,12 @@ export const Columns = [
     width: "200px",
   },
   {
-    name: "Drop Coins",
-    selector: (row) => row.dropCoins,
-    sortable: true,
-    // center: true,
-    width: "150px",
-  },
-  {
     name: "Claimed Date",
     selector: (row) => row.createdAt,
     sortable: true,
     center: true,
     width: "200px",
-    cell: (row) => <Text>{new Date(row.createdAt).toLocaleDateString()}</Text>,
+    cell: (row) => new Date(row.createdAt).toLocaleDateString(),
   },
   {
     name: "Claimed Time",
@@ -41,6 +46,6 @@ export const Columns = [
     sortable: true,
     center: true,
     width: "200px",
-    cell: (row) => <Text>{new Date(row.createdAt).toLocaleTimeString()}</Text>,
+    cell: (row) => new Date(row.createdAt).toLocaleTimeString(),
   },
 ];
