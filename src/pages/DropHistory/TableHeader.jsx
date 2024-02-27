@@ -1,0 +1,124 @@
+import { Button, Text } from "@mantine/core";
+import { Repeat } from "tabler-icons-react";
+import { useNavigate } from "react-router-dom";
+import moment from "moment-timezone";
+
+export const Columns = [
+  {
+    name: "Sr No.",
+    selector: (row) => row.serialNo,
+    width: "100px",
+    sortable: true,
+  },
+  {
+    name: "Center",
+    selector: (row) => row.centerLocation,
+    width: "200px",
+    cell: (row) => (
+      <a href={row.centerLocationURL} target="_blank">
+        {row.centerLocation}
+      </a>
+    ),
+    sortable: true,
+  },
+  {
+    name: "Drop Name",
+    selector: (row) => row.dropName,
+    sortable: true,
+    // center: true,
+    width: "140px",
+  },
+  {
+    name: "Drop Type",
+    selector: (row) => row.dropType,
+    sortable: true,
+    // center: true,
+    width: "140px",
+  },
+  {
+    name: "Drop Category",
+    selector: (row) => row.dropCategory,
+    sortable: true,
+    // center: true,
+    width: "200px",
+  },
+
+  {
+    name: "Drops",
+    selector: (row) => row.drops.length,
+    sortable: true,
+    // center: true,
+    width: "100px",
+  },
+  {
+    name: "Expiry",
+    selector: (row) => row.expiry,
+    sortable: true,
+    center: true,
+    width: "160px",
+    cell: (row) => moment(row.expiry).tz("Asia/Shanghai").format("DD-MM-YYYY - hh:mm A"),
+  },
+  {
+    name: "Is Expired",
+    selector: (row) => row.expiry,
+    sortable: true,
+    center: true,
+    width: "160px",
+    cell: (row) => (moment(row.expiry).tz("Asia/Shanghai") < moment().tz("Asia/Shanghai") ? "Yes" : "No"),
+  },
+  {
+    name: "Created At",
+    selector: (row) => row.createdAt,
+    sortable: true,
+    center: true,
+    width: "160px",
+    cell: (row) => moment(row.createdAt).tz("Asia/Shanghai").format("DD-MM-YYYY - hh:mm A"),
+  },
+  {
+    name: "Actions",
+    center: true,
+    width: "140px",
+    cell: (row) => {
+      return (
+        <NavigateToAddDrop
+          // disabled={
+          // moment(row.expiry).tz("Asia/Shanghai") > moment().tz("Asia/Shanghai")
+          // }
+          center={row.center}
+          dropsCount={row.dropsCount}
+          radius={row.radius}
+          dropName={row.dropName}
+          cardType={row.cardType}
+          centerLocation={row.centerLocation}
+        />
+      );
+    },
+  },
+];
+
+const NavigateToAddDrop = ({ center, radius, dropsCount, disabled, dropName, cardType, centerLocation }) => {
+  const navigate = useNavigate();
+
+  return (
+    <Button
+      onClick={() => {
+        navigate("/add-drop", {
+          state: {
+            dropsCount: dropsCount || 20,
+            center,
+            dropName,
+            radius,
+            cardType,
+            centerLocation,
+          },
+        });
+      }}
+      style={{ cursor: disabled ? "default" : "pointer", display: "flex" }}
+      disabled={disabled}
+      variant="outline"
+      leftSection={<Repeat color={disabled ? "grey" : "blue"} />}
+    >
+      Re-drop
+    </Button>
+  );
+};
