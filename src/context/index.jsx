@@ -8,6 +8,7 @@ export const UserProvider = ({ children }) => {
     id: userData?.id,
     email: userData?.email,
     accessToken: userData?.accessToken,
+    userType: userData?.userType,
   });
   const value = { user, setUser };
 

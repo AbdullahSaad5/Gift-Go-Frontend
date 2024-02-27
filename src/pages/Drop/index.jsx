@@ -88,9 +88,9 @@ const Drop = () => {
       numberOfDrops: (value) => (value ? null : "Select Quantity"),
       expirationDateTime: (value) => (value ? null : "Select Expiration Date"),
       dropType: (value) => (value ? null : "Select Card Type"),
-      company: (value) => (value ? null : "Select Company"),
       dropCategory: (value) => (value ? null : "Select Drop Category"),
       scheduleDateTime: (value, values) => (values.schedule && !value ? "Select Schedule Date" : null),
+      company: (value) => (user?.userType === "Admin" && !value ? "Select Company" : null),
     },
   });
   const onPlaceChanged = () => {
@@ -171,6 +171,7 @@ const Drop = () => {
     form.setFieldValue("locations", points);
   };
 
+  console.log("form", form.errors);
   return (
     <Box>
       <PageHeader title={"Drop Offers"} subTitle={"Drop your offer like its hot"} />

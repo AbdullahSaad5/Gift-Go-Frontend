@@ -1,4 +1,4 @@
-import { Menu, Text, Avatar, Group } from "@mantine/core";
+import { Menu, Text, Avatar, Group, Stack } from "@mantine/core";
 import styles from "./styles.module.css";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -6,37 +6,31 @@ import { UserContext } from "../../../context";
 
 export default function ProfileMenu() {
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   return (
     <Menu shadow="md" width={200}>
       <Menu.Target>
         <Group className={styles["menu-trigger-avatar"]}>
-          <Text visibleFrom="xs" c="white" fw={600}>
-            Gift Go Admin
-          </Text>
+          <Stack gap={0}>
+            <Text visibleFrom="xs" c="white" fw={600}>
+              {user.name}
+            </Text>
+            <Text visibleFrom="sm" c="gray" fw={500} fz={"xs"}>
+              {user.email}
+            </Text>
+          </Stack>
           <Avatar src={"/default-avatar.png"} />
         </Group>
       </Menu.Target>
 
       <Menu.Dropdown>
-        {/* <Menu.Label>Application</Menu.Label>
-        <Menu.Item>Settings</Menu.Item>
-        <Menu.Item>Messages</Menu.Item>
-        <Menu.Item>Gallery</Menu.Item>
         <Menu.Item
-          rightSection={
-            <Text size="xs" c="dimmed">
-              ⌘K
-            </Text>
-          }
+          onClick={() => {
+            navigate("/settings");
+          }}
         >
-          Search
+          Settings
         </Menu.Item>
-
-        <Menu.Divider />
-
-        <Menu.Label>Danger zone</Menu.Label>
-        <Menu.Item>Transfer my data</Menu.Item> */}
         <Menu.Item
           c="red"
           onClick={() => {

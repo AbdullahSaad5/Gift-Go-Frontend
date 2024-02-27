@@ -33,8 +33,16 @@ const Signin = () => {
     },
     {
       onSuccess: (response) => {
-        localStorage.setItem("user", JSON.stringify(response.data.data));
-        setUser(response.data.data);
+        const userData = response.data.data;
+        localStorage.setItem("user", JSON.stringify(userData));
+        const userDetails = {
+          name: userData?.fullName,
+          id: userData?.id,
+          email: userData?.email,
+          userType: userData?.userType,
+          accessToken: userData?.accessToken,
+        };
+        setUser(userDetails);
         navigate("/");
       },
       onError: (err) => {

@@ -36,7 +36,7 @@ export default function Sidebar({ toggle }) {
         isLink: false,
         children: [
           {
-            label: "Drop",
+            label: "Drops",
             icon: <DropletIcon size={18} />,
             to: "/drop",
           },
@@ -61,7 +61,7 @@ export default function Sidebar({ toggle }) {
             to: "/drop-requests",
           },
           {
-            label: "Reward Claimed",
+            label: "Claimed Rewards",
             icon: <CheckCircle2Icon size={18} />,
             to: "/claimed",
           },
