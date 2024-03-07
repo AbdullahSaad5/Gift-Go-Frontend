@@ -12,10 +12,10 @@ export default function ProfileMenu() {
       <Menu.Target>
         <Group className={styles["menu-trigger-avatar"]}>
           <Stack gap={0}>
-            <Text visibleFrom="xs" c="white" fw={600}>
+            <Text visibleFrom="xs" c="black" fw={600}>
               {user.name}
             </Text>
-            <Text visibleFrom="sm" c="gray" fw={500} fz={"xs"}>
+            <Text visibleFrom="sm" c="black" fw={500} fz={"xs"}>
               {user.email}
             </Text>
           </Stack>

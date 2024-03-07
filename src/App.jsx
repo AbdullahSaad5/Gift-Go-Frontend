@@ -25,6 +25,8 @@ import SocialMediaLinks from "./pages/SocialMediaLinks";
 import Tutorials from "./pages/Tutorials";
 import Users from "./pages/Users";
 import MoneyOwed from "./pages/MoneyOwed";
+import Gift from "./pages/Gift";
+import ViewGifts from "./pages/Gift/ViewGift";
 
 function App() {
   return (
@@ -35,6 +37,8 @@ function App() {
           <Route path="/" element={<CustomAppShell />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/add-drop" element={<Drop />} />
+            <Route path="/add-gift" element={<Gift />} />
+            <Route path="/gifts" element={<ViewGifts />} />
             <Route path="/drop" element={<ViewDrops />} />
             <Route path="/scheduled" element={<Scheduled />} />
             <Route path="/live" element={<Live />} />

@@ -5,6 +5,7 @@ import {
   DropletIcon,
   FileWarning,
   GaugeCircleIcon,
+  Gift,
   GitPullRequestDraftIcon,
   HelpCircle,
   Settings,
@@ -35,6 +36,11 @@ export default function Sidebar({ toggle }) {
         icon: <DropletIcon size={18} />,
         isLink: false,
         children: [
+          {
+            label: "Gifts",
+            icon: <Gift size={18} />,
+            to: "/gifts",
+          },
           {
             label: "Drops",
             icon: <DropletIcon size={18} />,
@@ -163,7 +169,7 @@ export default function Sidebar({ toggle }) {
           return (
             // If the item is not a link, return a Text component
             <Box key={ind}>
-              <Text className={styles["sidebar-section-title"]} c="gray" key={item.label}>
+              <Text className={styles["sidebar-section-title"]} c="black" key={item.label}>
                 {item.label}
               </Text>
               {item.children.map((child, i) => {

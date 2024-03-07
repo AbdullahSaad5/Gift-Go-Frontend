@@ -5,20 +5,17 @@ import ProfileMenu from "../profile-menu";
 
 export default function Header({ opened, toggle }) {
   return (
-    <Flex align={"center"} px={"lg"} h="100%" justify={"space-between"} bg={"rgb(11, 68, 106)"}>
+    <Flex align={"center"} px={"lg"} h="100%" justify={"space-between"} bg={"#85C0CE"}>
       <Burger
         opened={opened}
         onClick={toggle}
         hiddenFrom="sm"
         size="sm"
-        color="white"
+        color="black"
         className="mantine-focus-never"
       />
       <Group>
         <img src="/logo.png" alt="logo" className={styles["logo"]} />
-        <Text fw={600} c="white">
-          Gift Go
-        </Text>
       </Group>
       <Group>
         <ProfileMenu />

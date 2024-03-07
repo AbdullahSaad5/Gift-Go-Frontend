@@ -2,7 +2,7 @@ import { ActionIcon, Flex, Tooltip } from "@mantine/core";
 import React, { useState } from "react";
 // import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { Eye, Trash, TrashOff } from "tabler-icons-react";
+import { Eye, Pencil, PencilOff, Trash, TrashOff } from "tabler-icons-react";
 import DeleteModal from "../DeleteModal";
 import { useMutation, useQueryClient } from "react-query";
 import { backendUrl } from "../../../constants";
@@ -13,15 +13,16 @@ const ActionIcons = ({ type, edit = false, view, del, rowData, viewData, blocked
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [openDelete, setOpenDelete] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
   const handleDelete = useMutation(
     async () => {
       let link = backendUrl + `/${type.toLowerCase()}/${rowData._id}`;
       if (type === "drops") link = backendUrl + `/${type.toLowerCase()}/get-specific/${rowData._id}`;
       else if (type === "Coupons-group") link = backendUrl + `/coupons/delete-group/${rowData._id}`;
       return axios.delete(link, {
-        // headers: {
-        //   authorization: `Bearer ${user.token}`,
-        // },
+        headers: {
+          authorization: user.accessToken,
+        },
       });
     },
     {
@@ -29,6 +30,7 @@ const ActionIcons = ({ type, edit = false, view, del, rowData, viewData, blocked
         setOpenDelete(false);
         toast.success(res.data.message);
         if (type === "Users") queryClient.invalidateQueries("fetchUsers");
+        if (type === "gifts") queryClient.invalidateQueries("fetchGifts");
         else if (type === "Companies") queryClient.invalidateQueries("fetchCompanies");
         else if (type === "Coupons") queryClient.invalidateQueries("fetchCoupons");
         else if (type === "drops") queryClient.invalidateQueries("fetchDrops");
@@ -43,7 +45,24 @@ const ActionIcons = ({ type, edit = false, view, del, rowData, viewData, blocked
   );
   return (
     <Flex gap={5}>
-      {edit && edit}
+      {edit && (
+        <Tooltip label="Edit">
+          <ActionIcon
+            disabled={blocked}
+            bg="white"
+            onClick={() => {
+              let link;
+              if (type === "gifts") {
+                link = `/add-gift`;
+              }
+
+              navigate(link, { state: { data: rowData } });
+            }}
+          >
+            {blocked ? <PencilOff /> : <Pencil stroke={"gray"} />}
+          </ActionIcon>
+        </Tooltip>
+      )}
       {del && (
         <Tooltip label="Delete">
           <ActionIcon disabled={blocked} bg="white" onClick={() => setOpenDelete(true)}>
