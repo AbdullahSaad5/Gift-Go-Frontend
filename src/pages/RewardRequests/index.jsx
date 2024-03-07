@@ -58,7 +58,7 @@ const RewardRequests = () => {
           }}
         />
       </Flex>
-      <DataGrid data={data} columns={Columns} progressLoading={status === "loading" || isFetching} />
+      <DataGrid data={data} columns={Columns} progressPending={status === "loading" || isFetching} />
     </Box>
   );
 };

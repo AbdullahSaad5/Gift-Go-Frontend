@@ -43,13 +43,6 @@ export const Columns = (setOpen, setEditData) => [
     sortable: true,
   },
   {
-    name: "Gift Quantity",
-    selector: (row) => row.giftQuantity,
-    grow: 1,
-    sortable: true,
-    center: true,
-  },
-  {
     name: "Drop Category",
     width: "200px",
     selector: (row) => row.giftCategory,

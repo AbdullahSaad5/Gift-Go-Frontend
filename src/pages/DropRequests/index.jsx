@@ -84,11 +84,12 @@ const DropRequests = () => {
           placeholder={"Search Drop..."}
           style={{ flex: 1 }}
           leftIcon={"search"}
+          value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button primary={false} label={"Clear"} onClick={() => setOpen(true)} />
+        <Button primary={false} label={"Clear"} onClick={() => setSearch("")} />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading" || isFetching} />
+      <DataGrid data={filteredItems} columns={Columns} progressPending={status === "loading" || isFetching} />
     </Box>
   );
 };

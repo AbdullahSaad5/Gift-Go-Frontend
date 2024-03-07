@@ -41,7 +41,6 @@ const Gift = () => {
       company: user?.userType === "Admin" ? "" : user?.companyId,
       giftName: "",
       giftCategory: "",
-      giftQuantity: "",
       giftDescription: "",
       giftImage: null,
     },
@@ -56,12 +55,6 @@ const Gift = () => {
           ? "Gift Name is too long"
           : null,
       giftCategory: (value) => !value && "Gift Category is required",
-      giftQuantity: (value) =>
-        !value
-          ? "Gift Quantity is required"
-          : isNaN(value)
-          ? "Gift Quantity must be a number"
-          : value < 1 && "Gift Quantity must be greater than 0",
       giftDescription: (value) =>
         !value
           ? "Gift Description is required"
@@ -75,7 +68,7 @@ const Gift = () => {
   });
 
   useEffect(() => {
-    if (location.state.data) {
+    if (location.state?.data) {
       let company = location.state.data.company._id;
       form.setValues({
         ...location.state.data,
@@ -157,7 +150,6 @@ const Gift = () => {
               data={["Silver", "Gold", "Platinum"]}
               validateName="giftCategory"
             />
-            <InputField label={"Gift Quantity"} withAsterisk form={form} validateName="giftQuantity" />
 
             <TextArea
               label={"Enter Gift Description"}

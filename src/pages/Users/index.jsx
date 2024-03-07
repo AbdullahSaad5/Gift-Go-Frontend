@@ -20,6 +20,7 @@ const Users = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   const [userType, setUserType] = useState(null);
+  const [activeStatus, setActiveStatus] = useState(null);
   const [opened, { open, close }] = useDisclosure();
 
   const { status, isFetching } = useQuery(
@@ -69,8 +70,9 @@ const Users = () => {
   const filteredItems = data.filter((item) => {
     return (
       (item?.fullName?.toLowerCase().includes(search.toLowerCase()) ||
-        item?.email?.name?.toLowerCase().includes(search.toLowerCase())) &&
-      (userType ? item.status === userType : true)
+        item?.email?.toLowerCase().includes(search.toLowerCase())) &&
+      (activeStatus ? item.status === activeStatus : true) &&
+      (userType ? item.userType === userType : true)
     );
   });
   return (
@@ -87,6 +89,12 @@ const Users = () => {
         <SelectMenu
           data={["Active", "Blocked"]}
           placeholder={"Filter by status"}
+          value={activeStatus}
+          onChange={(value) => setActiveStatus(value)}
+        />
+        <SelectMenu
+          data={["User", "Company", "Admin"]}
+          placeholder={"Filter by Type"}
           value={userType}
           onChange={(value) => setUserType(value)}
         />

@@ -23,8 +23,8 @@ const Drop = () => {
     radius: passedRadius,
     centerLocation,
     dropName,
-    cardType,
     company,
+    gift,
   } = useLocation().state || {};
 
   const navigate = useNavigate();
@@ -42,9 +42,37 @@ const Drop = () => {
     libraries,
   });
 
-  const dropTypes = ["Silver", "Gold", "Platinum"];
+  const form = useForm({
+    validateInputOnChange: true,
+    initialValues: {
+      locations: [],
+      expirationDateTime: "",
+      scheduleDateTime: "",
+      dropName: dropName ? `Re-${dropName}` : "",
+      gift: gift || "",
+      numberOfDrops: dropsCount || "",
+      schedule: false,
+      company: company || "",
+    },
 
-  const dropCategories = ["Gift", "Coupon"];
+    validate: {
+      dropName: (value) => (value?.length > 0 ? null : "Enter Drop Name"),
+      numberOfDrops: (value) =>
+        !value
+          ? "Please enter the number of drops"
+          : !/^[0-9]*$/.test(value)
+          ? "Enter a valid number"
+          : parseInt(value) < 1
+          ? "Number of drops must be greater than 0"
+          : parseInt(value) > 100
+          ? "Number of drops must be less than 100"
+          : null,
+      expirationDateTime: (value) => (value ? null : "Select Expiration Date"),
+      gift: (value) => (value ? null : "Select Gift"),
+      scheduleDateTime: (value, values) => (values.schedule && !value ? "Select Schedule Date" : null),
+      company: (value) => (user?.userType === "Admin" && !value ? "Select Company" : null),
+    },
+  });
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: "companies",
@@ -56,6 +84,24 @@ const Drop = () => {
       });
     },
     enabled: user?.userType === "Admin",
+  });
+
+  const {
+    data: giftData,
+    isLoading: giftIsLoading,
+    isFetching: giftIsFetching,
+    refetch: refetchGifts,
+    isRefetching: isRefetchingGifts,
+  } = useQuery({
+    queryKey: ["fetchGifts", form.values.company],
+    queryFn: () => {
+      return axios.get(backendUrl + `/gifts?company=${form.values.company}`, {
+        headers: {
+          authorization: `${user.accessToken}`,
+        },
+      });
+    },
+    enabled: !!form.values.company,
   });
 
   // Use the Geolocation API to get the user's location by default
@@ -70,29 +116,6 @@ const Drop = () => {
     }
   }, []);
 
-  const form = useForm({
-    initialValues: {
-      locations: [],
-      expirationDateTime: "",
-      scheduleDateTime: "",
-      dropName: dropName ? `Re-${dropName}` : "",
-      dropType: "",
-      dropCategory: "",
-      numberOfDrops: dropsCount || "",
-      schedule: false,
-      company: company || "",
-    },
-
-    validate: {
-      dropName: (value) => (value?.length > 0 ? null : "Enter Drop Name"),
-      numberOfDrops: (value) => (value ? null : "Select Quantity"),
-      expirationDateTime: (value) => (value ? null : "Select Expiration Date"),
-      dropType: (value) => (value ? null : "Select Card Type"),
-      dropCategory: (value) => (value ? null : "Select Drop Category"),
-      scheduleDateTime: (value, values) => (values.schedule && !value ? "Select Schedule Date" : null),
-      company: (value) => (user?.userType === "Admin" && !value ? "Select Company" : null),
-    },
-  });
   const onPlaceChanged = () => {
     if (selectedPlace != null) {
       const place = selectedPlace.getPlace();
@@ -113,7 +136,6 @@ const Drop = () => {
 
   const handleAddDrop = useMutation(
     async (values) => {
-      setLoading(true);
       const data = { ...values };
 
       data.locations = data.locations.map((obj) => Object.values(obj));
@@ -132,18 +154,18 @@ const Drop = () => {
       onSuccess: (response) => {
         toast.success(response.data.message);
         form.reset();
-        setLoading(false);
         navigate("/drop");
       },
       onError: (err) => {
         toast.error(err.response.data.message);
-        setLoading(false);
       },
     }
   );
 
   const generateOffers = () => {
     if (!form.values.numberOfDrops) return toast.error("Please enter the number of drops and try again!");
+
+    if (form.values.numberOfDrops > 100) return toast.error("Number of drops must be less than 100");
     // An array to store the generated points
     var points = [];
     // A constant for converting degrees to radians
@@ -171,7 +193,6 @@ const Drop = () => {
     form.setFieldValue("locations", points);
   };
 
-  console.log("form", form.errors);
   return (
     <Box>
       <PageHeader title={"Drop Offers"} subTitle={"Drop your offer like its hot"} />
@@ -239,38 +260,46 @@ const Drop = () => {
               position: "relative",
             }}
           >
-            <LoadingOverlay visible={isLoading || isFetching} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+            <LoadingOverlay
+              visible={isLoading || isFetching || giftIsLoading || giftIsFetching || isRefetchingGifts}
+              zIndex={1000}
+              overlayProps={{ radius: "sm", blur: 2 }}
+            />
             <InputField label={"Drop Name"} required form={form} validateName="dropName" />
 
             {user?.userType === "Admin" && (
               <SelectMenu
                 label={"Select Company"}
                 required
-                form={form}
+                // form={form}
+                value={form.values.company}
+                onChange={(e) => {
+                  form.setFieldValue("company", e);
+                  form.setFieldValue("gift", null);
+                  refetchGifts();
+                }}
                 searchable
                 data={data?.data?.data?.map((obj) => {
                   return { value: obj._id, label: obj.fullName };
                 })}
-                validateName="company"
+                // validateName="company"
               />
             )}
-            <SelectMenu
-              label={"Select Drop Type"}
-              required
-              form={form}
-              searchable
-              data={dropTypes}
-              validateName="dropType"
-            />
 
             <SelectMenu
-              label={"Select Drop Category"}
+              label={"Select Gift"}
+              disabled={!form.values.company}
               required
-              form={form}
+              // form={form}
               searchable
-              data={dropCategories}
-              validateName="dropCategory"
+              data={giftData?.data?.data?.map((obj) => {
+                return { value: obj._id, label: obj.giftName };
+              })}
+              value={form.values.company ? form.values.gift : null}
+              onChange={(e) => form.setFieldValue("gift", e)}
+              // validateName="gift"
             />
+
             <InputField
               label={"Area (Radius)"}
               value={radius}
@@ -279,9 +308,10 @@ const Drop = () => {
               onChange={(e) => setRadius(parseInt(e.target.value))}
             />
 
-            <InputField label={"Quantity"} required form={form} validateName="numberOfDrops" />
+            <InputField label={"Number of Drops"} required form={form} validateName="numberOfDrops" />
 
             <DateTimePicker
+              withAsterisk
               label="Expiration Date and Time"
               minDate={new Date()}
               placeholder="Pick Expiration Date and Time"
@@ -290,6 +320,7 @@ const Drop = () => {
             <Checkbox label="Schedule Drop" {...form.getInputProps("schedule")} />
             {form.values.schedule && (
               <DateTimePicker
+                withAsterisk
                 label="Scheduled Date and Time"
                 minDate={new Date()}
                 maxDate={form.values.expirationDateTime}
@@ -301,7 +332,12 @@ const Drop = () => {
               <Button primary={false} onClick={generateOffers} style={{ flex: 1 }}>
                 Generate Offer
               </Button>
-              <Button loading={loading} style={{ flex: 1 }} type={"submit"} disabled={!form.values.locations.length}>
+              <Button
+                loading={handleAddDrop.isLoading || handleAddDrop.isFetching}
+                style={{ flex: 1 }}
+                type={"submit"}
+                disabled={!form.values.locations.length}
+              >
                 Drop Offer
               </Button>
             </Flex>

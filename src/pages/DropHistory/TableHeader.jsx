@@ -17,25 +17,18 @@ export const Columns = [
     sortable: true,
   },
   {
-    name: "Drop Name",
-    selector: (row) => row.dropName,
+    name: "Gift",
+    selector: (row) => row.gift?.giftName,
     sortable: true,
     // center: true,
     width: "140px",
   },
   {
-    name: "Drop Type",
-    selector: (row) => row.dropType,
+    name: "Gift Category",
+    selector: (row) => row.gift?.giftCategory,
     sortable: true,
     // center: true,
     width: "140px",
-  },
-  {
-    name: "Drop Category",
-    selector: (row) => row.dropCategory,
-    sortable: true,
-    // center: true,
-    width: "200px",
   },
   {
     name: "Center",
@@ -90,18 +83,30 @@ export const Columns = [
           // moment(row.expiry).tz("Asia/Shanghai") > moment().tz("Asia/Shanghai")
           // }
           center={row.center}
-          dropsCount={row.dropsCount}
+          dropsCount={row.drops.length}
           radius={row.radius}
           dropName={row.dropName}
           cardType={row.cardType}
           centerLocation={row.centerLocation}
+          gift={row.gift._id}
+          company={row.company?._id}
         />
       );
     },
   },
 ];
 
-const NavigateToAddDrop = ({ center, radius, dropsCount, disabled, dropName, cardType, centerLocation }) => {
+const NavigateToAddDrop = ({
+  center,
+  radius,
+  dropsCount,
+  disabled,
+  dropName,
+  cardType,
+  centerLocation,
+  gift,
+  company,
+}) => {
   const navigate = useNavigate();
 
   return (
@@ -109,12 +114,14 @@ const NavigateToAddDrop = ({ center, radius, dropsCount, disabled, dropName, car
       onClick={() => {
         navigate("/add-drop", {
           state: {
-            dropsCount: dropsCount || 20,
             center,
-            dropName,
             radius,
+            dropsCount,
+            dropName,
             cardType,
             centerLocation,
+            gift,
+            company,
           },
         });
       }}

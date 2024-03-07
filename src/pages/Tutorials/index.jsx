@@ -166,7 +166,7 @@ const Tutorials = () => {
         </Accordion>
         <Box px="md">
           <PageHeader title={"Tutorials Table"} subTitle={"View all of tutorials"} />
-          <DataGrid data={data} columns={Columns} progressLoading={status === "loading" || isFetching} />
+          <DataGrid data={data} columns={Columns} progressPending={status === "loading" || isFetching} />
         </Box>
       </Stack>
     </form>

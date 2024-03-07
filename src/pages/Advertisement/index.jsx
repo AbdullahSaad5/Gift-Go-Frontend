@@ -165,7 +165,7 @@ const Advertisements = () => {
         </Accordion>
         <Box px="md">
           <PageHeader title={"Advertisements Table"} subTitle={"View all Advertisements"} />
-          <DataGrid data={data} columns={Columns} progressLoading={status === "loading" || isFetching} />
+          <DataGrid data={data} columns={Columns} progressPending={status === "loading" || isFetching} />
         </Box>
       </Stack>
     </form>

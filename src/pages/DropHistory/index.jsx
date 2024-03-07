@@ -21,7 +21,7 @@ const DropHistory = () => {
     libraries: ["places", "geometry", "drawing"],
   });
 
-  const { status, isFetching } = useQuery(
+  const { isLoading, isFetching } = useQuery(
     "fetchDropHistory",
     () => {
       return axios.get(backendUrl + "/drop-collection", {
@@ -83,11 +83,12 @@ const DropHistory = () => {
           placeholder={"Search Drop..."}
           style={{ flex: 1 }}
           leftIcon={"search"}
+          value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button primary={false} label={"Clear"} onClick={() => setOpen(true)} />
+        <Button primary={false} label={"Clear"} onClick={() => setSearch("")} />
       </Flex>
-      <DataGrid data={filteredItems} columns={Columns} progressLoading={status === "loading" || isFetching} />
+      <DataGrid data={filteredItems} columns={Columns} progressPending={isLoading || isFetching} />
     </Box>
   );
 };

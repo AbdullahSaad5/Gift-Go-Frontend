@@ -1,4 +1,4 @@
-import { FileInput, Flex, Group, Modal, SimpleGrid, Textarea } from "@mantine/core";
+import { FileInput, Flex, Group, Modal, SimpleGrid, Textarea, em } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
@@ -18,10 +18,11 @@ const AddCompany = ({ opened, open, close, editData }) => {
   const queryClient = useQueryClient();
   const { user } = useContext(UserContext);
   const form = useForm({
+    validateInputOnChange: true,
     initialValues: {
       fullName: "",
       logo: null,
-      description: "",
+      address: "",
       phone: "",
       email: "",
       password: "",
@@ -29,12 +30,44 @@ const AddCompany = ({ opened, open, close, editData }) => {
     },
 
     validate: {
-      fullName: (value) => (value?.length > 0 ? null : "Enter Company Name"),
-      email: (value) => (value?.length > 0 ? null : "Enter Email"),
-      phone: (value) => (value?.length > 0 ? null : "Enter Phone"),
-      userType: (value) => (value?.length > 0 ? null : "Select User Type"),
-      password: (value) => (value?.length > 0 ? null : "Enter Password"),
-      confirmPassword: (value) => (value === form.values.password ? null : "Password does not match"),
+      fullName: (value) =>
+        !value?.length
+          ? "Enter Full Name"
+          : value.length > 40
+          ? "Name too long"
+          : !/^[a-zA-Z\s]*$/.test(value)
+          ? "Name should contain only alphabets"
+          : null,
+      email: (value) =>
+        !value?.length
+          ? "Enter Email"
+          : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+          ? "Invalid Email"
+          : value.length > 80
+          ? "Email too long"
+          : null,
+      phone: (value) => (!value?.length ? "Enter Phone" : !/^[0-9]*$/.test(value) ? "Invalid Phone" : null),
+      userType: (value) => !value?.length && "Select User Type",
+      password: (value) =>
+        !value?.length
+          ? "Enter Password"
+          : value.length < 8
+          ? "Password too short"
+          : value.length > 32
+          ? "Password too long"
+          : null,
+      confirmPassword: (value, values) =>
+        !value?.length ? "Enter Confirm Password" : value !== values.password ? "Password does not match" : null,
+      address: (value) =>
+        !value?.length
+          ? null
+          : value?.length > 100
+          ? "Address too long"
+          : value?.length < 10
+          ? "Address too short"
+          : /^[a-zA-Z0-9\s,]*$/.test(value)
+          ? "Address should contain only alphabets and numbers"
+          : null,
     },
   });
 
@@ -93,20 +126,19 @@ const AddCompany = ({ opened, open, close, editData }) => {
             searchable
             form={form}
             validateName={"userType"}
+            withAsterisk
           />
-          <InputField label={"Name"} form={form} validateName={"fullName"} />
-          <InputField label={"Email"} form={form} validateName={"email"} />
-          <InputField label={"Phone"} form={form} validateName={"phone"} />
-          <PasswordField label={"Password"} form={form} validateName={"password"} />
-          <PasswordField label={"Confirm Password"} form={form} validateName={"confirmPassword"} />
-          {/* <FileInput
-            label="Logo"
-            size="md"
-            placeholder="Upload JPG/PNG image"
-            radius={"md"}
-            leftSection={<Photo width={30} />}
-            {...form.getInputProps("logo")}
-          /> */}
+          <InputField label={"Name"} form={form} validateName={"fullName"} maxLength={41} withAsterisk />
+          <InputField label={"Email"} form={form} validateName={"email"} maxLength={80} withAsterisk />
+          <InputField label={"Phone"} form={form} validateName={"phone"} maxLength={20} withAsterisk />
+          <PasswordField label={"Password"} form={form} validateName={"password"} maxLength={33} withAsterisk />
+          <PasswordField
+            label={"Confirm Password"}
+            form={form}
+            validateName={"confirmPassword"}
+            maxLength={33}
+            withAsterisk
+          />
         </SimpleGrid>
         <Textarea
           label="Description"
@@ -132,7 +164,7 @@ const AddCompany = ({ opened, open, close, editData }) => {
               setEditData(null);
             }}
           />
-          <Button label={editData ? "Update" : "Add"} type={"submit"} />
+          <Button loading={handleAddCompany.isLoading} label={editData ? "Update" : "Add"} type={"submit"} />
         </Group>
       </form>
     </Modal>

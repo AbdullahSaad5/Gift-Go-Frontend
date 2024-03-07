@@ -18,6 +18,7 @@ const ViewGifts = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
+  const [dropType, setDropType] = useState("");
 
   const { status, isFetching } = useQuery(
     "fetchGifts",
@@ -38,11 +39,13 @@ const ViewGifts = () => {
       },
     }
   );
-  const [dropType, setDropType] = useState("");
-  // const filteredItems = data.filter((item) => {
-  //   let droptype = !dropType ? true : item?.cardType === dropType;
-  //   return item?.dropName?.toLowerCase().includes(search.toLowerCase()) && droptype;
-  // });
+
+  const filteredItems = data.filter(
+    (item) =>
+      (item?.giftName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.company?.fullName?.toLowerCase().includes(search.toLowerCase())) &&
+      (!dropType ? true : item?.giftCategory.toLowerCase() === dropType?.toLowerCase())
+  );
   return (
     <Box>
       <PageHeader title={"Gifts"} subTitle={"View all gifts in your system"} />
@@ -52,10 +55,11 @@ const ViewGifts = () => {
           placeholder={"Search here..."}
           style={{ flex: 1, minWidth: "200px" }}
           leftIcon={"search"}
+          value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <SelectMenu
-          data={["Gift", "Coupon"]}
+          data={["Silver", "Gold", "Platinum"]}
           onChange={(e) => setDropType(e)}
           value={dropType}
           placeholder={"Select Drop Type"}
@@ -71,7 +75,7 @@ const ViewGifts = () => {
         </Button>
         <Button onClick={() => navigate("/add-gift")}>Add Gift</Button>
       </Flex>
-      <DataGrid data={data} columns={Columns(setOpen)} progressPending={status === "loading" || isFetching} />
+      <DataGrid data={filteredItems} columns={Columns(setOpen)} progressPending={status === "loading" || isFetching} />
     </Box>
   );
 };

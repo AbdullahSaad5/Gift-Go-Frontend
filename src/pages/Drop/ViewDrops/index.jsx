@@ -17,6 +17,8 @@ const ViewDrops = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [dropType, setDropType] = useState("");
+
   const [data, setData] = useState([]);
 
   const { status, isFetching } = useQuery(
@@ -38,11 +40,13 @@ const ViewDrops = () => {
       },
     }
   );
-  const [dropType, setDropType] = useState("");
-  const filteredItems = data.filter((item) => {
-    let droptype = !dropType ? true : item?.cardType === dropType;
-    return item?.dropName?.toLowerCase().includes(search.toLowerCase()) && droptype;
-  });
+  const filteredItems = data.filter(
+    (item) =>
+      (item?.dropName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.gift?.giftName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.company?.fullName?.toLowerCase().includes(search.toLowerCase())) &&
+      (!dropType ? true : item?.gift?.giftCategory.toLowerCase() === dropType.toLocaleLowerCase())
+  );
   return (
     <Box>
       <PageHeader title={"Drops"} subTitle={"View all drops in your system"} />
@@ -55,7 +59,7 @@ const ViewDrops = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
         <SelectMenu
-          data={["Gift", "Coupon"]}
+          data={["Silver", "Gold", "Platinum"]}
           onChange={(e) => setDropType(e)}
           value={dropType}
           placeholder={"Select Drop Type"}

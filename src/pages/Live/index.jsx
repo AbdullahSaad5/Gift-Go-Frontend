@@ -35,7 +35,6 @@ const Live = () => {
   const onPlaceChanged = () => {
     if (selectedPlace != null) {
       const place = selectedPlace.getPlace();
-      // const name = place.name;
       setCenter({
         lat: place.geometry.location?.lat(),
         lng: place.geometry.location?.lng(),
