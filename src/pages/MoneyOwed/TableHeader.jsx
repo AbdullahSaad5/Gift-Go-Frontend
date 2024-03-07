@@ -2,6 +2,7 @@ import { Group, HoverCard, Switch, Text } from "@mantine/core";
 import ActionIcons from "../../components/general/ActionIcons";
 import Button from "../../components/general/Button";
 import ReceiveMoney from "./ReceiveMoney";
+import TableImageView from "../../components/general/TableImageView";
 
 export const Columns = (onHandleStatus) => [
   {
@@ -11,10 +12,16 @@ export const Columns = (onHandleStatus) => [
     sortable: true,
   },
   {
-    name: "Full Name",
+    name: "Company Name",
     selector: (row) => row.fullName,
     width: "200px",
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.logo} />
+        {row.fullName}
+      </>
+    ),
   },
   {
     name: "User Type",
@@ -35,14 +42,6 @@ export const Columns = (onHandleStatus) => [
     sortable: true,
     // center: true,
     width: "160px",
-  },
-  {
-    name: "Registration Date",
-    selector: (row) => row.createdAt,
-    sortable: true,
-    center: true,
-    width: "200px",
-    cell: (row) => new Date(row.createdAt).toLocaleDateString(),
   },
   {
     name: "Money Owed",

@@ -35,7 +35,7 @@ function CustomAppShell() {
       <AppShell.Main bg={"rgb(0,0,0,0.1)"} h={"100%"}>
         <Container
           p={"md"}
-          size={"xl"}
+          size={1400}
           bg={"white"}
           h={"100%"}
           style={{

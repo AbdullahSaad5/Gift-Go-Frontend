@@ -65,7 +65,7 @@ const AddCompany = ({ opened, open, close, editData }) => {
           ? "Address too long"
           : value?.length < 10
           ? "Address too short"
-          : /^[a-zA-Z0-9\s,]*$/.test(value)
+          : !/^[a-zA-Z0-9\s]*$/.test(value)
           ? "Address should contain only alphabets and numbers"
           : null,
     },
@@ -141,15 +141,15 @@ const AddCompany = ({ opened, open, close, editData }) => {
           />
         </SimpleGrid>
         <Textarea
-          label="Description"
+          label="Enter Address"
           radius={"md"}
           mt="sm"
           size="md"
           autosize
           minRows={2}
           maxRows={4}
-          placeholder="Description"
-          {...form.getInputProps("description")}
+          placeholder="Enter Address"
+          {...form.getInputProps("address")}
         />
         <Flex direction={"column"} align={"center"} mt={"md"}>
           <ImageUpload form={form} name="logo" />

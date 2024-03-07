@@ -2,6 +2,7 @@ import { Button, Text } from "@mantine/core";
 import { Repeat } from "tabler-icons-react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
+import TableImageView from "../../components/general/TableImageView";
 
 export const Columns = [
   {
@@ -15,6 +16,12 @@ export const Columns = [
     selector: (row) => row.company.fullName,
     width: "200px",
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.company.avatar} />
+        {row.company.fullName}
+      </>
+    ),
   },
   {
     name: "Gift",
@@ -22,13 +29,19 @@ export const Columns = [
     sortable: true,
     // center: true,
     width: "140px",
+    cell: (row) => (
+      <>
+        <TableImageView src={row.gift?.giftImage} />
+        {row.gift?.giftName}
+      </>
+    ),
   },
   {
     name: "Gift Category",
     selector: (row) => row.gift?.giftCategory,
     sortable: true,
     // center: true,
-    width: "140px",
+    width: "18px",
   },
   {
     name: "Center",
@@ -52,7 +65,6 @@ export const Columns = [
     name: "Expiry",
     selector: (row) => row.expiry,
     sortable: true,
-    center: true,
     width: "160px",
     cell: (row) => moment(row.expiry).tz("Asia/Shanghai").format("DD-MM-YYYY - hh:mm A"),
   },
@@ -60,7 +72,6 @@ export const Columns = [
     name: "Is Expired",
     selector: (row) => row.expiry,
     sortable: true,
-    center: true,
     width: "160px",
     cell: (row) => (moment(row.expiry).tz("Asia/Shanghai") < moment().tz("Asia/Shanghai") ? "Yes" : "No"),
   },
@@ -79,9 +90,6 @@ export const Columns = [
     cell: (row) => {
       return (
         <NavigateToAddDrop
-          // disabled={
-          // moment(row.expiry).tz("Asia/Shanghai") > moment().tz("Asia/Shanghai")
-          // }
           center={row.center}
           dropsCount={row.drops.length}
           radius={row.radius}

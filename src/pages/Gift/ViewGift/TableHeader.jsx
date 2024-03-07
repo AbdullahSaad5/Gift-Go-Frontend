@@ -1,4 +1,5 @@
 import ActionIcons from "../../../components/general/ActionIcons";
+import TableImageView from "../../../components/general/TableImageView";
 
 export const Columns = (setOpen, setEditData) => [
   {
@@ -12,6 +13,12 @@ export const Columns = (setOpen, setEditData) => [
     selector: (row) => row.company.fullName,
     grow: 1,
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.company.avatar} />
+        {row.company.fullName}
+      </>
+    ),
   },
 
   {
@@ -21,31 +28,21 @@ export const Columns = (setOpen, setEditData) => [
     sortable: true,
     cell: (row) => (
       <>
-        <img
-          src={row.giftImage}
-          alt="gift"
-          width={40}
-          height={40}
-          style={{
-            borderRadius: "50%",
-            marginRight: "10px",
-            objectFit: "cover",
-          }}
-        />
+        <TableImageView src={row.giftImage} />
         {row.giftName}
       </>
     ),
   },
   {
-    name: "Gift Description",
-    selector: (row) => row.giftDescription,
+    name: "Gift Category",
+    width: "200px",
+    selector: (row) => row.giftCategory,
     grow: 1,
     sortable: true,
   },
   {
-    name: "Drop Category",
-    width: "200px",
-    selector: (row) => row.giftCategory,
+    name: "Gift Description",
+    selector: (row) => row.giftDescription,
     grow: 1,
     sortable: true,
   },

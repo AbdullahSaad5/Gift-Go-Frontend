@@ -56,12 +56,13 @@ const ViewDrops = () => {
           placeholder={"Search here..."}
           style={{ flex: 1, minWidth: "200px" }}
           leftIcon={"search"}
+          value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <SelectMenu
           data={["Silver", "Gold", "Platinum"]}
-          onChange={(e) => setDropType(e)}
           value={dropType}
+          onChange={(e) => setDropType(e)}
           placeholder={"Select Drop Type"}
         />
         <Button

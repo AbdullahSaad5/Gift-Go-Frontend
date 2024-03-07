@@ -1,6 +1,7 @@
 import { Flex, Image, Stack, Switch, Text, Tooltip } from "@mantine/core";
 import ActionIcons from "../../../components/general/ActionIcons";
 import moment from "moment-timezone";
+import TableImageView from "../../../components/general/TableImageView";
 
 export const Columns = (setOpen, setEditData) => [
   {
@@ -14,6 +15,13 @@ export const Columns = (setOpen, setEditData) => [
     selector: (row) => row.company.fullName,
     grow: 1,
     sortable: true,
+    minWidth: "200px",
+    cell: (row) => (
+      <>
+        <TableImageView src={row.company.avatar} />
+        {row.company.fullName}
+      </>
+    ),
   },
   {
     name: "Drop Name",
@@ -25,18 +33,26 @@ export const Columns = (setOpen, setEditData) => [
     name: "Gift",
     selector: (row) => row.gift?.giftName,
     grow: 1,
+    minWidth: "200px",
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.gift?.giftImage} />
+        {row.gift?.giftName}
+      </>
+    ),
   },
   {
     name: "Gift Category",
     selector: (row) => row.gift?.giftCategory,
-    grow: 1,
+    width: "180px",
     sortable: true,
   },
   {
     name: "Drop Coordinates",
     selector: (row) => row.location.coordinates.join("-"),
     sortable: true,
+    width: "200px",
     cell: (row) => (
       <a
         href={`https://www.google.com/maps/search/?api=1&query=${row.location.coordinates.join(",")}`}
@@ -51,9 +67,10 @@ export const Columns = (setOpen, setEditData) => [
   },
   {
     name: "Expiry Date",
-    selector: (row) => row.expirationDate,
+    width: "200px",
+    selector: (row) => row.expirationDateTime,
     sortable: true,
-    cell: (row) => moment(row.expirationDate).tz("Asia/Shanghai").format("DD-MM-YYYY - hh:mm A"),
+    cell: (row) => moment(row.expirationDateTime).format("MM/DD/YYYY hh:mm A"),
   },
   {
     name: "Actions",

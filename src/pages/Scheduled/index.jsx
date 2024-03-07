@@ -9,11 +9,13 @@ import { useQuery } from "react-query";
 import { backendUrl } from "../../constants";
 import axios from "axios";
 import { UserContext } from "../../context";
+import SelectMenu from "../../components/general/SelectMenu";
 
 const Scheduled = () => {
   const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
+  const [dropType, setDropType] = useState("");
   const { isFetching, isLoading } = useQuery(
     "fetchScheduled",
     () => {
@@ -33,9 +35,13 @@ const Scheduled = () => {
       },
     }
   );
-  const filteredItems = data.filter((item) => {
-    return item?.dropName?.toLowerCase().includes(search.toLowerCase());
-  });
+  const filteredItems = data.filter(
+    (item) =>
+      (item?.dropName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.gift?.giftName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.company?.fullName?.toLowerCase().includes(search.toLowerCase())) &&
+      (!dropType ? true : item?.gift?.giftCategory.toLowerCase() === dropType.toLocaleLowerCase())
+  );
   return (
     <Box>
       <PageHeader title={"Scheduled"} subTitle={"View all of your Scheduled drops"} />
@@ -47,7 +53,20 @@ const Scheduled = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button primary={false} label={"Clear"} onClick={() => setSearch("")} />
+        <SelectMenu
+          data={["Silver", "Gold", "Platinum"]}
+          value={dropType}
+          onChange={(e) => setDropType(e)}
+          placeholder={"Select Drop Type"}
+        />
+        <Button
+          primary={false}
+          label={"Clear"}
+          onClick={() => {
+            setSearch("");
+            setDropType(null);
+          }}
+        />
       </Flex>
       <DataGrid data={filteredItems} columns={Columns} progressPending={isLoading || isFetching} />
     </Box>

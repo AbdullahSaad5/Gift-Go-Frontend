@@ -10,11 +10,13 @@ import { backendUrl } from "../../constants";
 import axios from "axios";
 import { UserContext } from "../../context";
 import { useJsApiLoader } from "@react-google-maps/api";
+import SelectMenu from "../../components/general/SelectMenu";
 
 const DropHistory = () => {
   const { user } = useContext(UserContext);
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
+  const [dropType, setDropType] = useState("");
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAP_KEY,
@@ -67,14 +69,13 @@ const DropHistory = () => {
       enabled: isLoaded,
     }
   );
-  const filteredItems = data;
-  // data.filter((item) => {
-  //   if (!search) return true;
-  //   return (
-  //     item?.dropName?.toLowerCase().includes(search.toLowerCase()) ||
-  //     item?.centerLocation?.toLowerCase().includes(search.toLowerCase())
-  //   );
-  // });
+  const filteredItems = data.filter(
+    (item) =>
+      (item?.dropName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.gift?.giftName?.toLowerCase().includes(search.toLowerCase()) ||
+        item?.company?.fullName?.toLowerCase().includes(search.toLowerCase())) &&
+      (!dropType ? true : item?.gift?.giftCategory.toLowerCase() === dropType.toLocaleLowerCase())
+  );
   return (
     <Box>
       <PageHeader title={"Drop History"} subTitle={"View all of your Drop History"} />
@@ -86,7 +87,20 @@ const DropHistory = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <Button primary={false} label={"Clear"} onClick={() => setSearch("")} />
+        <SelectMenu
+          data={["Silver", "Gold", "Platinum"]}
+          value={dropType}
+          onChange={(e) => setDropType(e)}
+          placeholder={"Select Drop Type"}
+        />
+        <Button
+          primary={false}
+          label={"Clear"}
+          onClick={() => {
+            setSearch("");
+            setDropType(null);
+          }}
+        />
       </Flex>
       <DataGrid data={filteredItems} columns={Columns} progressPending={isLoading || isFetching} />
     </Box>

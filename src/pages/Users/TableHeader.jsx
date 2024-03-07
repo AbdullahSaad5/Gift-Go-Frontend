@@ -1,5 +1,6 @@
 import { Group, HoverCard, Switch, Text } from "@mantine/core";
 import ActionIcons from "../../components/general/ActionIcons";
+import TableImageView from "../../components/general/TableImageView";
 
 export const Columns = (onHandleStatus) => [
   {
@@ -13,6 +14,12 @@ export const Columns = (onHandleStatus) => [
     selector: (row) => row.fullName,
     width: "200px",
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.avatar} />
+        {row.fullName}
+      </>
+    ),
   },
   {
     name: "User Type",
