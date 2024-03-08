@@ -20,6 +20,7 @@ const AddCompany = ({ opened, open, close, editData }) => {
   const form = useForm({
     validateInputOnChange: true,
     initialValues: {
+      userType: "",
       fullName: "",
       logo: null,
       address: "",
@@ -27,9 +28,13 @@ const AddCompany = ({ opened, open, close, editData }) => {
       email: "",
       password: "",
       confirmPassword: "",
+      goldPrice: "",
+      silverPrice: "",
+      platinumPrice: "",
     },
 
     validate: {
+      userType: (value) => !value?.length && "Select User Type",
       fullName: (value) =>
         !value?.length
           ? "Enter Full Name"
@@ -58,8 +63,8 @@ const AddCompany = ({ opened, open, close, editData }) => {
           : null,
       confirmPassword: (value, values) =>
         !value?.length ? "Enter Confirm Password" : value !== values.password ? "Password does not match" : null,
-      address: (value) =>
-        !value?.length
+      address: (value, values) =>
+        values?.userType !== "Company" && !value?.length
           ? null
           : value?.length > 100
           ? "Address too long"
@@ -67,6 +72,30 @@ const AddCompany = ({ opened, open, close, editData }) => {
           ? "Address too short"
           : !/^[a-zA-Z0-9\s]*$/.test(value)
           ? "Address should contain only alphabets and numbers"
+          : "Invalid Address",
+      silverPrice: (value, values) =>
+        values?.userType !== "Company" && !value?.length
+          ? "Enter Silver Price"
+          : value.length > 9
+          ? "Price too long"
+          : !/^[0-9]*$/.test(value)
+          ? "Invalid Price"
+          : null,
+      goldPrice: (value, values) =>
+        values?.userType !== "Company" && !value?.length
+          ? "Enter Gold Price"
+          : value.length > 9
+          ? "Price too long"
+          : !/^[0-9]*$/.test(value)
+          ? "Invalid Price"
+          : null,
+      platinumPrice: (value, values) =>
+        values?.userType !== "Company" && !value?.length
+          ? "Enter Platinum Price"
+          : value.length > 9
+          ? "Price too long"
+          : !/^[0-9]*$/.test(value)
+          ? "Invalid Price"
           : null,
     },
   });
@@ -79,6 +108,20 @@ const AddCompany = ({ opened, open, close, editData }) => {
     async (values) => {
       const url = await uploadFile(values.logo, "user-avatars");
       values = { ...values, avatar: url };
+
+      if (values.userType === "Company") {
+        const moneyByDropCategory = {
+          Silver: values.silverPrice,
+          Gold: values.goldPrice,
+          Platinum: values.platinumPrice,
+        };
+        values = { ...values, moneyByDropCategory };
+
+        delete values.silverPrice;
+        delete values.goldPrice;
+        delete values.platinumPrice;
+      }
+
       if (editData) {
         return axios.patch(backendUrl + `/companies/${editData._id}`, values, {
           headers: {
@@ -127,6 +170,7 @@ const AddCompany = ({ opened, open, close, editData }) => {
             form={form}
             validateName={"userType"}
             withAsterisk
+            autofill="off"
           />
           <InputField label={"Name"} form={form} validateName={"fullName"} maxLength={41} withAsterisk />
           <InputField label={"Email"} form={form} validateName={"email"} maxLength={80} withAsterisk />
@@ -151,6 +195,34 @@ const AddCompany = ({ opened, open, close, editData }) => {
           placeholder="Enter Address"
           {...form.getInputProps("address")}
         />
+        {form.values.userType === "Company" && (
+          <Group mt={"md"}>
+            <InputField
+              label={"Silver Price ($)"}
+              form={form}
+              validateName={"silverPrice"}
+              maxLength={10}
+              withAsterisk
+              type="number"
+            />
+            <InputField
+              label={"Gold Price ($)"}
+              form={form}
+              validateName={"goldPrice"}
+              maxLength={10}
+              withAsterisk
+              type="number"
+            />
+            <InputField
+              label={"Platinum Price ($)"}
+              form={form}
+              validateName={"platinumPrice"}
+              maxLength={10}
+              withAsterisk
+              type="number"
+            />
+          </Group>
+        )}
         <Flex direction={"column"} align={"center"} mt={"md"}>
           <ImageUpload form={form} name="logo" />
         </Flex>
