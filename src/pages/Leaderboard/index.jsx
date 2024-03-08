@@ -35,10 +35,9 @@ const Leaderboard = () => {
     {
       onSuccess: (res) => {
         const data = res.data.data;
-        const length = data.length;
         let newData = data.map((obj, ind) => {
           // to show serial no. in reverse order so that latest user will be on top (for better UX for client)
-          return { ...obj, serialNo: length - ind };
+          return { ...obj, serialNo: ind + 1, position: ind + 1 };
         });
         setData(newData);
       },

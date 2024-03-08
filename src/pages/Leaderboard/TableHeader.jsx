@@ -12,7 +12,7 @@ export const Columns = (onHandleStatus) => [
   {
     name: "Full Name",
     selector: (row) => row.fullName,
-    width: "200px",
+    grow: 1,
     sortable: true,
     cell: (row) => (
       <>
@@ -26,21 +26,27 @@ export const Columns = (onHandleStatus) => [
     selector: (row) => row.email,
     sortable: true,
     // center: true,
-    width: "230px",
+    grow: 1,
   },
   {
     name: "Phone No.",
     selector: (row) => row.phone,
     sortable: true,
     // center: true,
-    width: "160px",
+    grow: 1,
   },
   {
-    name: "Registration Date",
-    selector: (row) => row.createdAt,
+    name: "Position",
+    selector: (row) => row.position,
     sortable: true,
+    width: "160px",
     center: true,
+  },
+  {
+    name: "Drops Claimed",
+    selector: (row) => row.dropCount,
+    sortable: true,
     width: "200px",
-    cell: (row) => <Text>{new Date(row.createdAt).toLocaleDateString()}</Text>,
+    center: true,
   },
 ];
