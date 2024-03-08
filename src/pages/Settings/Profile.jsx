@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import PageHeader from "../../components/general/PageHeader";
-import { Group, Stack } from "@mantine/core";
+import { Flex, Group, Stack } from "@mantine/core";
 import InputField from "../../components/general/InputField";
 import Button from "../../components/general/Button";
 import { useForm } from "@mantine/form";
@@ -10,6 +10,7 @@ import axios from "axios";
 import { backendUrl } from "../../constants";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import ImageUpload from "../../components/general/ImageUpload";
 
 const Profile = () => {
   const { user } = useContext(UserContext);
@@ -21,6 +22,7 @@ const Profile = () => {
       email: user?.email,
       phone: user?.phone,
       address: user?.address,
+      logo: user?.avatar,
     });
   }, [user]);
 
@@ -31,6 +33,7 @@ const Profile = () => {
       email: user?.email,
       phone: user?.phone,
       address: user?.address,
+      logo: user?.avatar,
     },
 
     validate: {
@@ -85,7 +88,11 @@ const Profile = () => {
         <InputField label="Email" form={form} validateName={"email"} size="md" disabled={true} />
         <InputField label="Phone" form={form} validateName={"phone"} size="md" />
         <InputField label="Address" form={form} validateName={"address"} size="md" />
+        <Flex direction={"column"} align={"center"} mt={"md"}>
+          <ImageUpload form={form} name="logo" />
+        </Flex>
       </Stack>
+
       <Group justify="flex-end" mt="lg">
         <Button label={"Cancel"} primary={false} onClick={() => navigate("/")} />
         <Button label={"Update"} type={"submit"} />

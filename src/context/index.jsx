@@ -11,6 +11,7 @@ export const UserProvider = ({ children }) => {
     email: userData?.email,
     accessToken: userData?.accessToken,
     userType: userData?.userType,
+    avatar: userData?.avatar ? userData?.avatar : null,
   });
   const value = { user, setUser };
 
