@@ -1,4 +1,4 @@
-import { ActionIcon, Flex, Tooltip } from "@mantine/core";
+import { ActionIcon, Flex, Modal, Tooltip } from "@mantine/core";
 import React, { useState } from "react";
 // import { useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -8,9 +8,11 @@ import { useMutation, useQueryClient } from "react-query";
 import { backendUrl } from "../../../constants";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useDisclosure } from "@mantine/hooks";
 
 const ActionIcons = ({ type, edit = false, view, del, rowData, viewData, blocked, viewSize = "lg" }) => {
   const queryClient = useQueryClient();
+  const [opened, { open, close }] = useDisclosure();
   const navigate = useNavigate();
   const [openDelete, setOpenDelete] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
@@ -63,6 +65,18 @@ const ActionIcons = ({ type, edit = false, view, del, rowData, viewData, blocked
           </ActionIcon>
         </Tooltip>
       )}
+      {view && (
+        <Tooltip label="View">
+          <ActionIcon
+            bg="white"
+            onClick={() => {
+              open();
+            }}
+          >
+            <Eye stroke="gray" />
+          </ActionIcon>
+        </Tooltip>
+      )}
       {del && (
         <Tooltip label="Delete">
           <ActionIcon disabled={blocked} bg="white" onClick={() => setOpenDelete(true)}>
@@ -70,6 +84,10 @@ const ActionIcons = ({ type, edit = false, view, del, rowData, viewData, blocked
           </ActionIcon>
         </Tooltip>
       )}
+
+      <Modal opened={opened} title={`View ${type}`} onClose={close} centered>
+        {viewData}
+      </Modal>
 
       <DeleteModal
         label={`Delete Selected ${type}`}

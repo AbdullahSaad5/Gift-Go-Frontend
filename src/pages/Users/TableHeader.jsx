@@ -1,6 +1,7 @@
 import { Group, HoverCard, Switch, Text } from "@mantine/core";
 import ActionIcons from "../../components/general/ActionIcons";
 import TableImageView from "../../components/general/TableImageView";
+import ViewUser from "./ViewUser";
 
 export const Columns = (onHandleStatus) => [
   {
@@ -72,6 +73,6 @@ export const Columns = (onHandleStatus) => [
     name: "Actions",
     center: true,
     width: "100px",
-    cell: (row) => <ActionIcons rowData={row} del={true} type="Users" />,
+    cell: (row) => <ActionIcons rowData={row} view={true} del={true} type="Users" viewData={<ViewUser data={row} />} />,
   },
 ];
