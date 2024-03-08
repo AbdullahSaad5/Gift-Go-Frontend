@@ -52,7 +52,6 @@ const AddCompany = ({ opened, open, close, editData }) => {
           ? "Email too long"
           : null,
       phone: (value) => (!value?.length ? "Enter Phone" : !/^[0-9]*$/.test(value) ? "Invalid Phone" : null),
-      userType: (value) => !value?.length && "Select User Type",
       password: (value) =>
         !value?.length
           ? "Enter Password"
@@ -105,8 +104,6 @@ const AddCompany = ({ opened, open, close, editData }) => {
           : null,
     },
   });
-
-  console.log(form.values);
 
   useEffect(() => {
     if (editData) form.setValues(editData);
