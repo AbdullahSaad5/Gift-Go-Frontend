@@ -62,11 +62,6 @@ export default function Sidebar({ toggle }) {
             to: "/drop-history",
           },
           {
-            label: "Drop-Requests",
-            icon: <GitPullRequestDraftIcon size={18} />,
-            to: "/drop-requests",
-          },
-          {
             label: "Claimed Rewards",
             icon: <CheckCircle2Icon size={18} />,
             to: "/claimed",
@@ -96,6 +91,11 @@ export default function Sidebar({ toggle }) {
             icon: <User2Icon size={18} />,
             to: "/users",
           },
+          {
+            label: "Leaderboard",
+            icon: <User2Icon size={18} />,
+            to: "/users",
+          },
         ],
       },
       {
@@ -116,21 +116,6 @@ export default function Sidebar({ toggle }) {
         icon: <Settings size={18} />,
         isLink: false,
         children: [
-          // {
-          //   label: "Social Media Links",
-          //   icon: <Settings size={18} />,
-          //   to: "/social-media-links",
-          // },
-          // {
-          //   label: "Advertisements",
-          //   icon: <Settings size={18} />,
-          //   to: "/advertisements",
-          // },
-          // {
-          //   label: "Tutorials",
-          //   icon: <Settings size={18} />,
-          //   to: "/tutorials",
-          // },
           {
             label: "Settings",
             icon: <Settings size={18} />,

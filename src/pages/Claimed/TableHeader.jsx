@@ -1,4 +1,5 @@
 import { Text } from "@mantine/core";
+import TableImageView from "../../components/general/TableImageView";
 
 export const Columns = [
   {
@@ -8,20 +9,38 @@ export const Columns = [
     sortable: true,
   },
   {
-    name: "Offer Name",
+    name: "Company",
+    selector: (row) => row.company?.companyName,
+    width: "200px",
+    sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.company?.avatar} />
+        {row.company?.fullName}
+      </>
+    ),
+  },
+  {
+    name: "Drop Name",
     selector: (row) => row.dropName,
     width: "200px",
     sortable: true,
   },
   {
-    name: "Offer Type",
-    selector: (row) => row.dropType,
+    name: "Gift Name",
+    selector: (row) => row.gift?.giftName,
     width: "200px",
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.gift?.giftImage} />
+        {row.gift?.giftName}
+      </>
+    ),
   },
   {
-    name: "Offer Category",
-    selector: (row) => row.dropCategory,
+    name: "Gift Category",
+    selector: (row) => row.gift?.giftCategory,
     width: "200px",
     sortable: true,
   },
@@ -31,6 +50,12 @@ export const Columns = [
     sortable: true,
     // center: true,
     width: "200px",
+    cell: (row) => (
+      <>
+        <TableImageView src={row.scannedBy?.avatar} />
+        {row.scannedBy?.fullName}
+      </>
+    ),
   },
   {
     name: "Claimed Date",

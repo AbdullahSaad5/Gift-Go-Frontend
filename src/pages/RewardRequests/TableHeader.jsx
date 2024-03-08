@@ -1,4 +1,4 @@
-import { Badge, Group, HoverCard, Menu, Stack, Text } from "@mantine/core";
+import { Badge, Group, HoverCard, Menu, Modal, Stack, Text } from "@mantine/core";
 import { useContext } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { UserContext } from "../../context";
@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { backendUrl } from "../../constants";
 import Button from "../../components/general/Button";
+import TableImageView from "../../components/general/TableImageView";
+import { useDisclosure } from "@mantine/hooks";
 
 export const Columns = [
   {
@@ -35,25 +37,30 @@ export const Columns = [
     name: "Request Date",
     selector: (row) => row.createdAt,
     sortable: true,
-    center: true,
     width: "220px",
     cell: (row) => <Text>{new Date(row.createdAt).toLocaleString()}</Text>,
   },
   {
-    name: "Offer Name",
+    name: "Drop Name",
     selector: (row) => row.dropName,
     width: "200px",
     sortable: true,
   },
   {
-    name: "Offer Type",
-    selector: (row) => row.dropType,
+    name: "Gift Name",
+    selector: (row) => row.gift?.giftName,
     width: "200px",
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.gift?.giftImage} />
+        {row.gift?.giftName}
+      </>
+    ),
   },
   {
-    name: "Offer Category",
-    selector: (row) => row.dropCategory,
+    name: "Gift Category",
+    selector: (row) => row.gift?.giftCategory,
     width: "200px",
     sortable: true,
   },
@@ -62,6 +69,12 @@ export const Columns = [
     selector: (row) => row.company.fullName,
     width: "200px",
     sortable: true,
+    cell: (row) => (
+      <>
+        <TableImageView src={row.company.avatar} />
+        {row.company.fullName}
+      </>
+    ),
   },
   {
     name: "Deliver Reward",
@@ -75,81 +88,90 @@ export const Columns = [
           Delivered
         </Badge>
       ) : (
-        <Button variant="subtle" size="compact-lg" fz="sm">
-          Deliver
-        </Button>
+        <DeliverButton id={row._id} data={row} />
       ),
   },
 ];
-
-const StatusMenu = ({ status, id }) => {
-  const { user } = useContext(UserContext);
-  const queryClient = useQueryClient();
-
-  const handleUpdateRequestStatus = useMutation(
-    async ({ status }) => {
-      if (status) {
-        return axios.patch(
-          backendUrl + `/request/change-status/${id}`,
-          { status },
-          {
-            headers: {
-              authorization: `${user.accessToken}`,
-            },
-          }
-        );
-      }
-    },
-    {
-      onSuccess: (response) => {
-        toast.loading("Updating Table Please Wait");
-        toast.success(response.data.message);
-        queryClient.invalidateQueries("fetchRequests");
-      },
-      onError: (err) => {
-        toast.error(err.response.data.message);
-      },
-    }
-  );
-  return (
-    <Menu>
-      <Menu.Target>
-        <Badge
-          style={{ cursor: status === "Pending" ? "pointer" : "default" }}
-          rightSection={status === "Pending" ? <span>▼</span> : null}
-          color={status === "Pending" ? "orange" : status === "Accepted" ? "green" : "red"}
-          variant="light"
-        >
-          {status}
-        </Badge>
-      </Menu.Target>
-
-      {status === "Pending" ? (
-        <Menu.Dropdown>
-          <Menu.Item
-            onClick={() => {
-              handleUpdateRequestStatus.mutate({ id, status: "Accepted" });
-            }}
-          >
-            <StatusBadge status={"Accepted"} />
-          </Menu.Item>
-          <Menu.Item
-            onClick={() => {
-              handleUpdateRequestStatus.mutate({ id, status: "Denied" });
-            }}
-          >
-            <StatusBadge status={"Denied"} />
-          </Menu.Item>
-        </Menu.Dropdown>
-      ) : null}
-    </Menu>
-  );
-};
 
 const StatusBadge = ({ status }) => {
   return (
     <Badge color={status === "Pending" ? "orange" : status === "Accepted" ? "green" : "red"} variant="light" w="100%">
       {status}
     </Badge>
+  );
+};
+
+const DeliverButton = ({ id, data }) => {
+  const [opened, { open, close }] = useDisclosure();
+
+  const queryClient = useQueryClient();
+  const { user } = useContext(UserContext);
+  const { mutate, isLoading } = useMutation(
+    (id) => {
+      return axios.patch(backendUrl + `/drops/approve-reward/${id}`, null, {
+        headers: {
+          Authorization: `${user.accessToken}`,
+        },
+      });
+    },
+    {
+      onSuccess: () => {
+        const oldData = queryClient.getQueryData("fetchRequests").data.data;
+        const newData = oldData.map((obj) => {
+          if (obj._id === id) {
+            return { ...obj, rewardDelivered: true };
+          }
+          return obj;
+        });
+        queryClient.setQueryData("fetchRequests", { data: newData });
+        toast.success("Reward Delivered Successfully");
+        close();
+      },
+      onError: (err) => {
+        toast.error(err.response.data.message);
+        close();
+      },
+    }
+  );
+  return (
+    <>
+      <Button
+        variant="subtle"
+        size="compact-lg"
+        fz="sm"
+        onClick={() => {
+          open();
+        }}
+        loading={isLoading}
+        disabled={data.rewardDelivered}
+      >
+        {data.rewardDelivered ? "Delivered" : "Deliver"}
+      </Button>
+      <Modal opened={opened} onClose={close} centered>
+        <Text ta={"center"} fw={600} fz={"lg"}>
+          Are you sure you want to deliver this reward?
+        </Text>
+        <Group justify="center" mt={"md"}>
+          <Button
+            label="Cancel"
+            variant="outline"
+            color="red"
+            loading={isLoading}
+            onClick={() => {
+              close();
+            }}
+          />
+          <Button
+            label="Deliver"
+            primary
+            color="green"
+            loading={isLoading}
+            onClick={() => {
+              mutate(id);
+            }}
+          />
+        </Group>
+      </Modal>
+    </>
   );
 };
