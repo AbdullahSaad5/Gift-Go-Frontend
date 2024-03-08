@@ -80,7 +80,7 @@ const AddCompany = ({ opened, open, close, editData }) => {
           ? "Price too long"
           : value?.length < 1
           ? "Price too short"
-          : !/^[0-9]*$/.test(value)
+          : !/^\d{0,8}(\.\d{1,2})?$/.test(value)
           ? "Invalid Price"
           : null,
       goldPrice: (value, values) =>
@@ -90,7 +90,7 @@ const AddCompany = ({ opened, open, close, editData }) => {
           ? "Price too long"
           : value?.length < 1
           ? "Price too short"
-          : !/^[0-9]*$/.test(value)
+          : !/^\d{0,8}(\.\d{1,2})?$/.test(value)
           ? "Invalid Price"
           : null,
       platinumPrice: (value, values) =>
@@ -100,7 +100,7 @@ const AddCompany = ({ opened, open, close, editData }) => {
           ? "Price too long"
           : value?.length < 1
           ? "Price too short"
-          : !/^[0-9]*$/.test(value)
+          : !/^\d{0,8}(\.\d{1,2})?$/.test(value)
           ? "Invalid Price"
           : null,
     },
