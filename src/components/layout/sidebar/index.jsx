@@ -94,7 +94,7 @@ export default function Sidebar({ toggle }) {
           {
             label: "Leaderboard",
             icon: <User2Icon size={18} />,
-            to: "/users",
+            to: "/leaderboard",
           },
         ],
       },

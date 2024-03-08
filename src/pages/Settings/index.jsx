@@ -1,4 +1,4 @@
-import { Box, Group, PasswordInput, Stack } from "@mantine/core";
+import { Box, Group, PasswordInput, Stack, Tabs } from "@mantine/core";
 import React, { useContext } from "react";
 import Button from "../../components/general/Button";
 import PageHeader from "../../components/general/PageHeader";
@@ -9,56 +9,24 @@ import axios from "axios";
 import { UserContext } from "../../context";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import InputField from "../../components/general/InputField";
+import Profile from "./Profile";
+import ChangePassword from "./ChangePassword";
 
 const Settings = () => {
-  const { user } = useContext(UserContext);
-  const navigate = useNavigate();
-  const form = useForm({
-    validateInputOnChange: true,
-    initialValues: {
-      oldPassword: "",
-      newPassword: "",
-      confirmPass: "",
-    },
-
-    validate: {
-      oldPassword: (value) => (value?.length > 0 ? null : "Please enter old password"),
-      newPassword: (value) => (value?.length > 7 ? null : "Please enter new password containing at least 8 characters"),
-      confirmPass: (value, values) =>
-        value?.length > 0 && values?.newPassword === value ? null : "Please enter confirm password",
-    },
-  });
-  const handleChangePassword = useMutation(
-    async (values) => {
-      return axios.patch(backendUrl + `/auth/change-password`, values, {
-        headers: {
-          authorization: `${user.accessToken}`,
-        },
-      });
-    },
-    {
-      onSuccess: (res) => {
-        toast.success(res.data.message);
-        form.reset();
-      },
-      onError: (err) => {
-        toast.error(err.response.data.message);
-      },
-    }
-  );
   return (
-    <form onSubmit={form.onSubmit((values) => handleChangePassword.mutate(values))}>
-      <Stack>
-        <PageHeader title={"Settings"} subTitle={"Update your profile settings"} />
-        <PasswordInput label="Old Password" {...form.getInputProps("oldPassword")} size="md" />
-        <PasswordInput label="New Password" {...form.getInputProps("newPassword")} size="md" />
-        <PasswordInput label="Confirm Password" {...form.getInputProps("confirmPass")} size="md" />
-        <Group justify="flex-end" mt="lg">
-          <Button label={"Cancel"} primary={false} onClick={() => navigate("/")} />
-          <Button label={"Update"} type={"submit"} loading={handleChangePassword.isLoading} />
-        </Group>
-      </Stack>
-    </form>
+    <Tabs defaultValue="edit-profile">
+      <Tabs.List mb={"xl"}>
+        <Tabs.Tab value="edit-profile">Profile</Tabs.Tab>
+        <Tabs.Tab value="password">Change Password</Tabs.Tab>
+      </Tabs.List>
+      <Tabs.Panel value="edit-profile">
+        <Profile />
+      </Tabs.Panel>
+      <Tabs.Panel value="password">
+        <ChangePassword />
+      </Tabs.Panel>
+    </Tabs>
   );
 };
 
