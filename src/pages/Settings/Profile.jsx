@@ -61,6 +61,10 @@ const Profile = () => {
 
   const handleEditProfile = useMutation(
     async (values) => {
+      const imageURL = await ImageUpload(values.logo);
+      values.avatar = imageURL;
+      delete values.logo;
+
       return axios.patch(backendUrl + `/auth/edit-profile`, values, {
         headers: {
           authorization: `${user.accessToken}`,
