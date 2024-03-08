@@ -11,20 +11,11 @@ import { backendUrl } from "../../constants";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import ImageUpload from "../../components/general/ImageUpload";
+import { uploadFile } from "../../utils/upload-file";
 
 const Profile = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    form.setInitialValues({
-      fullName: user?.name,
-      email: user?.email,
-      phone: user?.phone,
-      address: user?.address,
-      logo: user?.avatar,
-    });
-  }, [user]);
 
   const form = useForm({
     validateInputOnChange: true,
@@ -61,7 +52,7 @@ const Profile = () => {
 
   const handleEditProfile = useMutation(
     async (values) => {
-      const imageURL = await ImageUpload(values.logo);
+      const imageURL = await uploadFile(values.logo, "user-avatars");
       values.avatar = imageURL;
       delete values.logo;
 
@@ -76,6 +67,17 @@ const Profile = () => {
         toast.success(res.data.message);
         const accessToken = JSON.parse(localStorage.getItem("user")).accessToken;
         const newData = { ...res.data.data.user, accessToken };
+        console.log(newData);
+        setUser((prev) => ({
+          ...prev,
+          name: newData?.fullName,
+          phone: newData?.phone,
+          address: newData?.address,
+          id: newData?.id,
+          email: newData?.email,
+          userType: newData?.userType,
+          avatar: newData?.avatar ? newData?.avatar : null,
+        }));
         localStorage.setItem("user", JSON.stringify(newData));
       },
       onError: (err) => {
