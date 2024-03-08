@@ -5,7 +5,7 @@ import { Columns } from "./TableHeader";
 import InputField from "../../components/general/InputField";
 import Button from "../../components/general/Button";
 import { useContext, useState } from "react";
-import AddOfferType from "./AddCompany";
+import AddCompany from "./AddCompany";
 import { backendUrl } from "../../constants";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -58,7 +58,7 @@ const Company = () => {
         columns={Columns(setOpen, setEditData)}
         progressPending={status === "loading" || isFetching}
       />
-      <AddOfferType open={open} setOpen={setOpen} editData={editData} setEditData={setEditData} />
+      <AddCompany open={open} setOpen={setOpen} editData={editData} setEditData={setEditData} />
     </Box>
   );
 };

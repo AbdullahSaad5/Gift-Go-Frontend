@@ -72,33 +72,41 @@ const AddCompany = ({ opened, open, close, editData }) => {
           ? "Address too short"
           : !/^[a-zA-Z0-9\s]*$/.test(value)
           ? "Address should contain only alphabets and numbers"
-          : "Invalid Address",
+          : null,
       silverPrice: (value, values) =>
         values?.userType !== "Company" && !value?.length
           ? "Enter Silver Price"
-          : value.length > 9
+          : value?.length > 9
           ? "Price too long"
+          : value?.length < 1
+          ? "Price too short"
           : !/^[0-9]*$/.test(value)
           ? "Invalid Price"
           : null,
       goldPrice: (value, values) =>
         values?.userType !== "Company" && !value?.length
           ? "Enter Gold Price"
-          : value.length > 9
+          : value?.length > 9
           ? "Price too long"
+          : value?.length < 1
+          ? "Price too short"
           : !/^[0-9]*$/.test(value)
           ? "Invalid Price"
           : null,
       platinumPrice: (value, values) =>
         values?.userType !== "Company" && !value?.length
           ? "Enter Platinum Price"
-          : value.length > 9
+          : value?.length > 9
           ? "Price too long"
+          : value?.length < 1
+          ? "Price too short"
           : !/^[0-9]*$/.test(value)
           ? "Invalid Price"
           : null,
     },
   });
+
+  console.log(form.values);
 
   useEffect(() => {
     if (editData) form.setValues(editData);
@@ -111,9 +119,9 @@ const AddCompany = ({ opened, open, close, editData }) => {
 
       if (values.userType === "Company") {
         const moneyByDropCategory = {
-          Silver: values.silverPrice,
-          Gold: values.goldPrice,
-          Platinum: values.platinumPrice,
+          Silver: isNaN(parseFloat(values.silverPrice)) ? 0 : parseFloat(values.silverPrice),
+          Gold: isNaN(parseFloat(values.goldPrice)) ? 0 : parseFloat(values.goldPrice),
+          Platinum: isNaN(parseFloat(values.platinumPrice)) ? 0 : parseFloat(values.platinumPrice),
         };
         values = { ...values, moneyByDropCategory };
 
