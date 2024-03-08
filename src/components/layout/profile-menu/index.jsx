@@ -19,7 +19,7 @@ export default function ProfileMenu() {
               {user.email}
             </Text>
           </Stack>
-          <Avatar src={"/default-avatar.png"} />
+          <Avatar src={user.avatar || "/default-avatar.png"} variant="outline" />
         </Group>
       </Menu.Target>
 
