@@ -174,7 +174,6 @@ const AddCompany = ({ opened, open, close, editData }) => {
             label="User Type"
             placeholder="Select User Type"
             data={["User", "Company", "Admin"]}
-            searchable
             form={form}
             validateName={"userType"}
             withAsterisk
