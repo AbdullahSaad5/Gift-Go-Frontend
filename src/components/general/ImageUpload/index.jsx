@@ -10,10 +10,27 @@ export default function ImageUpload({ form, name = "coverImage" }) {
 
   const { getRootProps, getInputProps, isDragActive, isDragReject, isDragAccept, fileRejections } = useDropzone({
     accept: {
-      "image/*": [],
+      "image/png": [],
+      "image/jpg": [],
+      "image/jpeg": [],
     },
     maxFiles: 1,
     onDrop: async (acceptedFiles) => {
+      if (!acceptedFiles.length) {
+        form.setFieldError(name, "Only .png, .jpg, .jpeg files are allowed");
+        return;
+      }
+
+      // only accept png, jpg, jpeg
+      if (
+        acceptedFiles[0].type !== "image/png" &&
+        acceptedFiles[0].type !== "image/jpg" &&
+        acceptedFiles[0].type !== "image/jpeg"
+      ) {
+        form.setFieldError(name, "Only .png, .jpg, .jpeg files are allowed");
+        return;
+      }
+
       const file = acceptedFiles[0];
       const options = {
         useWebWorker: true,
