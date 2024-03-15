@@ -95,7 +95,7 @@ const AddNotification = ({ opened, open, close, editData }) => {
         <Stack>
           <SelectMenu
             label="Company"
-            placeholder="Select Company"
+            placeholder={user?.userType === "Company" ? user?.fullName : "Select Company"}
             data={data?.data?.data?.map((obj) => {
               return { value: obj._id, label: obj.fullName };
             })}
