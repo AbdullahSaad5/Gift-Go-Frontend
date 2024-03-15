@@ -54,6 +54,7 @@ const AddNotification = ({ opened, open, close, editData }) => {
 
   const handleAddNotification = useMutation(
     (values) => {
+      if (user?.userType === "Company") values.company = user._id;
       return axios.post(backendUrl + "/notifications", values, {
         headers: {
           authorization: `${user.accessToken}`,

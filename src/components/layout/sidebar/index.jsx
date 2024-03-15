@@ -116,7 +116,6 @@ export default function Sidebar({ toggle }) {
         label: "Notifications",
         icon: <Bell size={18} />,
         isLink: false,
-        skip: true,
         children: [
           {
             label: "Notifications",
