@@ -28,6 +28,7 @@ import MoneyOwed from "./pages/MoneyOwed";
 import Gift from "./pages/Gift";
 import ViewGifts from "./pages/Gift/ViewGift";
 import Leaderboard from "./pages/Leaderboard";
+import Notifications from "./pages/Notifications";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route path="/reward-requests" element={<RewardRequests key="crypto" />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/users" element={<Users />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/owed" element={<MoneyOwed />} />
             <Route path="/companies" element={<Company />} />
             <Route path="/offers" element={<OfferTypes />} />

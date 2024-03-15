@@ -1,5 +1,6 @@
 import { Box, NavLink, Text } from "@mantine/core";
 import {
+  Bell,
   CalendarCheck,
   CheckCircle2Icon,
   DropletIcon,
@@ -108,6 +109,19 @@ export default function Sidebar({ toggle }) {
             label: "Money Owed",
             icon: <User2Icon size={18} />,
             to: "/owed",
+          },
+        ],
+      },
+      {
+        label: "Notifications",
+        icon: <Bell size={18} />,
+        isLink: false,
+        skip: true,
+        children: [
+          {
+            label: "Notifications",
+            icon: <Bell size={18} />,
+            to: "/notifications",
           },
         ],
       },
